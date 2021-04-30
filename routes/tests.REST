@@ -5,3 +5,17 @@ GET http://localhost/
 #     "name": "sample",
 #     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 # }
+
+### CREATE INSTRUCTOR
+POST http://localhost/instructor HTTP/1.1
+content-type: application/json
+
+{
+	"fullName": "John Johns", 
+	"title" : "Professor",
+	"email": "test@test.com",
+	"phone": "01234567",
+	"password": "test",
+	"teachingCourses": [],
+	"department": "Arts and Sciences"
+}

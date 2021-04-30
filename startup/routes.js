@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 
 const courses = require('../routes/courses');
+const instructors = require('../routes/instructors');
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -14,5 +15,6 @@ module.exports = function (app) {
 	});
 
 	app.use('/courses', courses);
+	app.use('/instructors', instructors);
 	app.use('*', (req, res) => res.redirect('/'));
 }
