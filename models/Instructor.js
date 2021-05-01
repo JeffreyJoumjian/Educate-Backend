@@ -39,7 +39,7 @@ const Instructor = model('Instructor', instructorSchema);
 function validateInstructorSchema(isNew) {
 
 	return Joi.object({
-		instructor_id: isNew ? Joi.optional() : Joi.objectId().required(),
+		instructor_id: isNew ? Joi.objectId().optional() : Joi.objectId().required(),
 		fullName: isNew ? Joi.string().required() : Joi.string(),
 		email: isNew ? Joi.string().required() : Joi.string(),
 		password: isNew ? Joi.string().required() : Joi.string(),

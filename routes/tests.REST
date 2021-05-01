@@ -1,4 +1,4 @@
-GET http://localhost/
+GET http://localhost:3000/
 # POST https://example.com/comments HTTP/1.1
 # content-type: application/json
 # {
@@ -6,16 +6,39 @@ GET http://localhost/
 #     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 # }
 
+### GET ALL INSTRUCTORS
+GET http://localhost:3000/api/instructors/all
+
+### GET INSTRUCTORY BY ID
+GET http://localhost:3000/api/instructors/608c3fe2c2295f5315c02797 
+
 ### CREATE INSTRUCTOR
-POST http://localhost/instructor HTTP/1.1
+POST http://localhost:3000/api/instructors HTTP/1.1
 content-type: application/json
 
 {
 	"fullName": "John Johns", 
 	"title" : "Professor",
-	"email": "test@test.com",
+	"email": "test2@test.com",
 	"phone": "01234567",
 	"password": "test",
 	"teachingCourses": [],
 	"department": "Arts and Sciences"
+}
+
+### UPDATE INSTRUCTOR
+PUT http://localhost:3000/api/instructors/
+Content-Type: application/json
+
+{
+	"instructor_id": "608c3fe2c2295f5315c02797",
+	"fullName": "John Johns"
+}
+
+### DELETE INSTRUCTOR BY ID
+DELETE http://localhost:3000/api/instructors/ 
+Content-Type: application/json
+
+{
+	"instructor_id": "608d3ae4848e360a0bc0999c"
 }

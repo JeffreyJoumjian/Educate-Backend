@@ -7,6 +7,12 @@ const { validateInstructorSchema } = require('../models/Instructor');
 
 router.get('/', (req, res) => res.status(200).send('instructors'));
 
+router.get('/all', (req, res) => instructorController.getAllInstructors(req, res));
+
+router.get('/:instructor_id', (req, res) => {
+	instructorController.getInstructorById(req, res);
+});
+
 router.post('/', validator.body(validateInstructorSchema(true)), (req, res) => {
 	instructorController.createInstructor(req, res);
 });
@@ -15,5 +21,8 @@ router.put('/', validator.body(validateInstructorSchema(false)), (req, res) => {
 	instructorController.updateInstructorInfo(req, res);
 });
 
+router.delete('/', validator.body(validateInstructorSchema(false)), (req, res) => {
+	instructorController.deleteInstructorById(req, res);
+});
 
 module.exports = router;

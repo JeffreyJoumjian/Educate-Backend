@@ -14,7 +14,7 @@ module.exports = function (app) {
 		res.status(200).send("home");
 	});
 
-	app.use('/courses', courses);
-	app.use('/instructors', instructors);
+	app.use('/api/courses', courses);
+	app.use('/api/instructors', instructors);
 	app.use('*', (req, res) => res.redirect('/'));
 }
