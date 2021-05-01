@@ -98,6 +98,8 @@ const instructorController = {
 		}
 	}
 
+	// TODO add and remove courses from instructor
+
 }
 
 module.exports = instructorController;
