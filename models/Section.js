@@ -15,18 +15,10 @@ const sectionSchema = new Schema({
 		require: true,
 		unique: true,
 	},
-	semester: {
-		type: String
-	},
-	startDate: {
-		type: String,
-	},
-	endDate: {
-		type: String,
-	},
-	schedule: {
-		type: String
-	},
+	semester: { type: String },
+	startDate: { type: String, },
+	endDate: { type: String, },
+	schedule: { type: String },
 	instructors: {
 		type: [Schema.Types.ObjectId],
 		ref: 'Instructor'

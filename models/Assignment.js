@@ -30,6 +30,7 @@ const assignmentSchema = new Schema({
 	visibility: { type: String, enum: assignmentVisibilityTypes },
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
+	allowMultipleSubmission: { type: Boolean, default: true },
 	files: [{
 		fileName: { type: String, require: true },
 		fileType: {
@@ -58,6 +59,7 @@ function validateAssignmentSchema() {
 		visibility: Joi.string().valid(...assignmentVisibilityTypes),
 		isVisible: Joi.boolean(),
 		allowLateSubmissions: Joi.boolean(),
+		allowMultipleSubmissions: Joi.boolean(),
 		files: Joi.any()
 	});
 }
