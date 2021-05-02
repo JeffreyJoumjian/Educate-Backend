@@ -44,9 +44,9 @@ function validateInstructorSchema(isNew) {
 		email: isNew ? Joi.string().required() : Joi.string(),
 		password: isNew ? Joi.string().required() : Joi.string(),
 		phone: Joi.string(),
-		title: Joi.string() || Joi.array().items(Joi.string()),
+		title: Joi.string() || Joi.array().items(Joi.string().valid(...titles)),
 		teachingCourses: Joi.array().items(Joi.objectId()),
-		department: Joi.string()
+		department: Joi.string().valid(...departments)
 	});
 }
 
