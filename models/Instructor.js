@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
-const { departments, titles } = require('../utils/departments');
+const { departments, titles } = require('../utils/universityData');
 
 const instructorSchema = new Schema({
 	fullName: {
@@ -25,7 +25,7 @@ const instructorSchema = new Schema({
 		type: String,
 		required: true
 	},
-	teachingCourses: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+	teachingSections: [{ type: Schema.Types.ObjectId, ref: 'Section' }],
 	department: {
 		type: String,
 		enum: departments
@@ -39,13 +39,13 @@ const Instructor = model('Instructor', instructorSchema);
 function validateInstructorSchema(isNew) {
 
 	return Joi.object({
-		instructor_id: isNew ? Joi.objectId().optional() : Joi.objectId().required(),
+		instructor_id: !isNew ? Joi.objectId().required() : Joi.objectId(),
 		fullName: isNew ? Joi.string().required() : Joi.string(),
 		email: isNew ? Joi.string().required() : Joi.string(),
 		password: isNew ? Joi.string().required() : Joi.string(),
 		phone: Joi.string(),
 		title: Joi.string() || Joi.array().items(Joi.string().valid(...titles)),
-		teachingCourses: Joi.array().items(Joi.objectId()),
+		teachingSections: Joi.array().items(Joi.objectId()),
 		department: Joi.string().valid(...departments)
 	});
 }

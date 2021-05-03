@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose'); const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
@@ -27,10 +27,12 @@ const assignmentSchema = new Schema({
 	startTime: { type: String, require: true },
 	endDate: { type: String, require: true },
 	endTime: { type: String, require: true },
+	isActive: { type: Boolean, default: true },
 	visibility: { type: String, enum: assignmentVisibilityTypes },
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmission: { type: Boolean, default: true },
+	path: { type: String, require: true, default: '/' },
 	files: [{
 		fileName: { type: String, require: true },
 		fileType: {
@@ -46,7 +48,7 @@ const Assignment = model('Assigment', assignmentSchema);
 
 function validateAssignmentSchema() {
 	return Joi.object({
-		section: Joi.objectId.required(),
+		section: Joi.objectId().required(),
 		name: Joi.string().required(),
 		description: Joi.string(),
 		type: Joi.string().valid(...assignentTypes),

@@ -28,4 +28,9 @@ const titles = [
 	'Lab Assisstant'
 ];
 
-module.exports = { departments, schools, titles }
+const semesters = [
+	'Spring 2021',
+	'Fall 2021'
+]
+
+module.exports = { departments, schools, titles, semesters };

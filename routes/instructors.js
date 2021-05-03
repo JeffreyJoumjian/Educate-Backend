@@ -21,7 +21,7 @@ router.put('/', validator.body(validateInstructorSchema(false)), (req, res) => {
 	instructorController.updateInstructorInfo(req, res);
 });
 
-router.delete('/', validator.body(validateInstructorSchema(false)), (req, res) => {
+router.delete('/', (req, res) => {
 	instructorController.deleteInstructorById(req, res);
 });
 

@@ -42,3 +42,68 @@ Content-Type: application/json
 {
 	"instructor_id": "608d3ae4848e360a0bc0999c"
 }
+
+# COURSES
+###
+GET http://localhost:3000/api/courses/ 
+
+### CREATE COURSE
+POST http://localhost:3000/api/courses/ 
+Content-Type: application/json
+
+{
+	"name": "Web Programming",
+	"nameNumber":"CSC 430",
+	"description": "Et velit vitae dolorem voluptates atque non repellendus voluptate repudiandae. Reiciendis quod maiores omnis. Molestias modi maxime ipsa quia voluptas impedit ea. Laborum sapiente minus quo facere unde.",
+	"credits": 3,
+	"department":"Computer Science and Mathematics"
+}
+
+# SECTIONS
+### GET ALL SECTIONS BY COURSE
+GET  http://localhost:3000/api/sections/all/60904afc24a2bc16836a032f 
+
+### GET SECTION BY ID
+GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c
+
+### GET STUDENTS BY SECTION ID
+GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c/students
+
+### GET INSRUCTORS BY SECTION ID
+GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c/instructors
+
+
+### CREATE SECTION
+POST http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"course_id": "60904afc24a2bc16836a032f",
+	"CRN": "00001",
+	"semester": "Spring 2021",
+	"startDate":"January 20, 2021",
+	"endDate":"May 28, 2021",
+	"schedule":"MWF 10:00 AM 11:00 AM"
+}
+
+### UPDATE SECTION
+PUT http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"section_id": "60905bc9aef14f1acbb2ac6c",
+	"schedule":"MWF 10:00 AM 10:50 AM"
+}
+### DELETE SECTION
+DELETE  http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"section_id": "609065ad6a1c2c1cd9e6fa09"
+
+}
+
+
+# ASSIGNMENTS
+### 
+GET http://localhost:3000/api/assignments/

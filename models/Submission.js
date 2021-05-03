@@ -6,7 +6,16 @@ const submissionSchema = new Schema({
 	assignment: { type: Schema.Types.ObjectId, ref: 'Assignment', require: true },
 	student: { type: Schema.Types.ObjectId, ref: 'Student', require: true },
 	grade: { type: Number, min: 0, max: 100, default: 0, require: true },
-	comments: { type: String }
+	comments: { type: String },
+	files: [{
+		fileName: { type: String, require: true },
+		fileType: {
+			type: String,
+			enum: supportedFileTypes,
+			require: true
+		},
+		data: { type: Buffer, require: true }
+	}]
 
 });
 
@@ -17,7 +26,8 @@ function validateSubmissionSchema() {
 		assignment: Joi.objectId().required(),
 		student: Joi.objectId().required(),
 		grade: Joi.number().required(),
-		comments: Joi.string().optional()
+		comments: Joi.string().optional(),
+		files: Joi.any()
 	});
 }
 
