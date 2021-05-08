@@ -6,12 +6,12 @@ const { departments } = require('../utils/universityData');
 
 
 const courseSchema = new mongoose.Schema({
-	name: { type: String, require: true, unique: true },
-	nameNumber: { type: String, require: true, unique: true },
+	name: { type: String, required: true, unique: true },
+	nameNumber: { type: String, required: true, unique: true },
 	description: { type: String },
 	credits: {
 		type: Number,
-		require: true,
+		required: true,
 		min: 1,
 		max: 5,
 		default: 3

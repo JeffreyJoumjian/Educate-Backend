@@ -16,6 +16,9 @@ router.get('/:section_id/students', (req, res) => sectionController.getStudentsB
 
 router.get('/:section_id/instructors', (req, res) => sectionController.getInstructorsBySectionId(req, res));
 
+router.get('/:section_id/grades/:student_id', (req, res) => sectionController.calculateStudentTotalGrade(req, res));
+router.get('/:section_id/grades/all', (req, res) => sectionController.calculateAllStudentsTotalGrade(req, res));
+
 router.post('/', validator.body(validateSectionSchema()), (req, res) => {
 	sectionController.createSection(req, res);
 });
@@ -24,8 +27,6 @@ router.put('/', validator.body(validateSectionSchema(false)), (req, res) => {
 	sectionController.updateSectionInfo(req, res);
 });
 
-router.delete('/', (req, res) => {
-	sectionController.deleteSectionById(req, res);
-});
+router.delete('/', (req, res) => sectionController.deleteSectionById(req, res));
 
 module.exports = router;

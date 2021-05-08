@@ -6,7 +6,7 @@ const isValidObjectId = require('../utils/validateObjectId');
 
 const instructorController = {
 	getAllInstructors: async (req, res) => {
-		res.status(200).json(await Instructor.find());
+		return res.status(200).json(await Instructor.find().select('-password'));
 	},
 
 	getInstructorById: async (req, res) => {
@@ -18,10 +18,10 @@ const instructorController = {
 		let instructor = await Instructor.findById(instructor_id);
 
 		if (!instructor)
-			return res.status(404).send('The instructor with the given id was not found');
+			return res.status(404).send('The instructor with the given ID was not found');
 
 
-		return res.status(200).json(_.pick(instructor, ['_id', 'fullName', 'title', 'email', 'password', 'phone', 'teachingCourses', 'department']));
+		return res.status(200).json(_.pick(instructor, ['_id', 'fullName', 'title', 'email', 'phone', 'teachingCourses', 'department']));
 	},
 
 	createInstructor: async (req, res) => {
@@ -41,7 +41,7 @@ const instructorController = {
 			return res.status(200).json(_.pick(instructor, ['_id', "fullName", "email", "phone", "title", "teachingCourses", "department"]));
 		}
 		catch (e) {
-			return res.status(400).send(e.message);
+			return res.status(500).send(e.message);
 		}
 
 
@@ -60,19 +60,16 @@ const instructorController = {
 			if (!instructor)
 				return res.status(404).send('The instructor with the given ID was not found');
 
-
-			// await validateInstructorSchema.validateAsync(validateInstructorSchema(false));
-
 			for (let prop in req.body) {
 				if (prop !== "instructor_id" || prop !== "password")
 					instructor[prop] = req.body[prop];
 				if (prop === "password")
-					instructor.password = await bcrypt.hash(instructor.password, 10);
+					instructor.password = await bcrypt.hash(req.body.password, 10);
 			}
 
 			await instructor.save();
 
-			return res.status(204).json(_.pick(instructor, ['_id', "fullName", "email", "phone", "title", "teachingCourses", "department"]));
+			return res.status(201).json(_.pick(instructor, ['_id', "fullName", "email", "phone", "title", "teachingCourses", "department"]));
 		}
 		catch (e) {
 			return res.status(500).send(e.message);

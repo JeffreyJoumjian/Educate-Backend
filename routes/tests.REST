@@ -83,7 +83,8 @@ Content-Type: application/json
 	"semester": "Spring 2021",
 	"startDate":"January 20, 2021",
 	"endDate":"May 28, 2021",
-	"schedule":"MWF 10:00 AM 11:00 AM"
+	"schedule":"MWF 10:00 AM 11:00 AM",
+	"instructors": ["6090307bfbc01c1145aaddc7"]
 }
 
 ### UPDATE SECTION
@@ -103,6 +104,43 @@ Content-Type: application/json
 
 }
 
+# STUDENTS
+
+### GET ALL STUDENTS
+GET http://localhost:3000/api/students/all
+
+### GET STUDENT BY ID
+GET http://localhost:3000/api/students/
+
+### CREATE STUDENT
+POST http://localhost:3000/api/students HTTP/1.1
+content-type: application/json
+
+{
+"fullName":"Jeffrey Joumjian",
+"email":"jeffrey.joumjian@test.com",
+"phone":"12345678",
+"password":"test",
+"department":"Computer Science and Mathematics",
+"studentSections":["60954f2642150e087e5057c6"]
+}
+
+### UPDATE STUDENT
+PUT http://localhost:3000/api/students/
+Content-Type: application/json
+
+{
+	"student_id":"60956f50eb89150ca7f4db07",
+	"fullName": "John Johns"
+}
+
+### DELETE STUDENT BY ID
+DELETE http://localhost:3000/api/students/ 
+Content-Type: application/json
+
+{
+	"student_id": "60956f50eb89150ca7f4db07"
+}
 
 # ASSIGNMENTS
 ### 

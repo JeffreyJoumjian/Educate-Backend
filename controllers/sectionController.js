@@ -1,8 +1,10 @@
 const _ = require('lodash');
 const isValidObjectId = require('../utils/validateObjectId');
 
+const { Student } = require('../models/Student');
 const { Section } = require('../models/Section');
 const { Course } = require('../models/Course');
+const { Submission } = require('../models/Submission');
 
 const assignmentController = {
 	getAllSectionsByCourse: async (req, res) => {
@@ -50,8 +52,97 @@ const assignmentController = {
 		if (!section)
 			return res.status(404).send("The section with the given ID does not exist");
 
-		return res.status(200).json(section.students);
+		return res.status(200).send(section.students);
 	},
+
+	calculateStudentTotalGrade: async (req, res) => {
+		// for each assigment in the section
+		// get the student's submission if any * assigment %
+		let student_id = req.params.student_id;
+		let section_id = req.params.section_id;
+
+		if (!(isValidObjectId(student_id) && isValidObjectId(section_id)))
+			return res.status(400).send("Invalid ID");
+
+		let section = await Section.findById(section_id).populate('assignments');
+
+		if (!section)
+			return res.status(404).send("The section with the given ID was not found.");
+
+		let student = await Student.findById(student_id);
+
+		if (!student)
+			return res.status(404).send("The student with the given ID was not found.");
+
+		if (!student.studentSections.includes(section_id))
+			return res.status(400).send("The student is not a student in this section");
+
+		let totalGrade = 0;
+
+		try {
+
+			for (let assignment of section.assigments) {
+				const { gradePercentage } = assignment;
+
+				let submission = await
+					Submission.find()
+						.and([{ assignment }, { student: student_id }])
+						.sort('createdAt')[0];
+
+				if (submission)
+					totalGrade += (submission.grade * gradePercentage).toFixed(2);
+
+			};
+
+			return res.status(200).json({ student, totalGrade });
+		}
+		catch (e) {
+			return res.status(500).send(e.message);
+		}
+	},
+
+	calculateAllStudentsTotalGrade: async (req, res) => {
+		let section_id = req.params.section_id;
+
+		if (!(isValidObjectId(student_id) && isValidObjectId(section_id)))
+			return res.status(400).send("Invalid ID");
+
+		let section = await Section.findById(section_id).populate('students');
+
+		if (!section)
+			return res.status(404).send("The section with the given ID was not found.");
+
+		const grades = [];
+
+		try {
+			// for each student
+			for (let student of section.students) {
+				let totalGrade = 0;
+
+				for (let assignment of section.assignments) {
+					const { gradePercentage } = assignment;
+
+					let submission = await Submission.find()
+						.and([{ assignment }, { student: student._id }])
+						.sort('createdAt')[0];
+
+					if (submission)
+						totalGrade += (submission.grade * gradePercentage).toFixed(2);
+				}
+
+				grades.push({
+					student: _.pick(student, ['fullName', 'email']),
+					totalGrade
+				})
+			}
+
+			return res.status(200).json(grades);
+		}
+		catch (e) {
+			return res.status(500).send(e.message);
+		}
+	},
+
 	getInstructorsBySectionId: async (req, res) => {
 		let section_id = req.params.section_id;
 
@@ -117,7 +208,8 @@ const assignmentController = {
 				return res.status(404).send("The section with the given ID does not exist");
 
 			for (let prop in req.body)
-				section[prop] = req.body[prop];
+				if (prop !== "section_id")
+					section[prop] = req.body[prop];
 
 			await section.save();
 
@@ -128,6 +220,7 @@ const assignmentController = {
 		}
 	},
 
+	// also remove section from course
 	deleteSectionById: async (req, res) => {
 		try {
 			let section_id = req.body.section_id;

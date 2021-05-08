@@ -3,15 +3,15 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const materialSchema = new Schema({
-	path: { type: String, require: true, default: '/' },
+	path: { type: String, required: true, default: '/' },
 	file: {
-		fileName: { type: String, require: true },
+		fileName: { type: String, required: true },
 		fileType: {
 			type: String,
 			enum: supportedFileTypes,
-			require: true
+			required: true
 		},
-		data: { type: Buffer, require: true }
+		data: { type: Buffer, required: true }
 	}
 });
 

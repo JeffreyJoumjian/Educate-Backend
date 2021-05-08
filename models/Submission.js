@@ -1,32 +1,39 @@
-const { Schema, model } = require('mongoose'); const { Schema, model } = require('mongoose');
+const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
+const { supportedFileTypes } = require('../utils/universityData');
+
 const submissionSchema = new Schema({
-	assignment: { type: Schema.Types.ObjectId, ref: 'Assignment', require: true },
-	student: { type: Schema.Types.ObjectId, ref: 'Student', require: true },
-	grade: { type: Number, min: 0, max: 100, default: 0, require: true },
+	assignment: { type: Schema.Types.ObjectId, ref: 'Assignment', required: true },
+	student: { type: Schema.Types.ObjectId, ref: 'Student', required: true },
+	grade: { type: Number, min: 0, max: 100, default: 0 },
+	isGraded: { type: Boolean, default: false },
 	comments: { type: String },
+	date: { type: String, default: (new Date()).toUTCString() },
 	files: [{
-		fileName: { type: String, require: true },
+		fileName: { type: String, required: true },
 		fileType: {
 			type: String,
 			enum: supportedFileTypes,
-			require: true
+			required: true
 		},
-		data: { type: Buffer, require: true }
+		data: { type: Buffer, required: true }
 	}]
 
 });
 
 const Submission = model('Submission', submissionSchema);
 
-function validateSubmissionSchema() {
+function validateSubmissionSchema(isNew = true) {
 	return Joi.object({
-		assignment: Joi.objectId().required(),
-		student: Joi.objectId().required(),
-		grade: Joi.number().required(),
+		submission_id: !isNew ? Joi.objectId().required() : Joi.objectId().optional(),
+		assignment: isNew ? Joi.objectId().required() : Joi.objectId().optional(),
+		student: isNew ? Joi.objectId().required() : Joi.objectId().optional(),
+		grade: Joi.number(),
+		isGraded: Joi.boolean(),
 		comments: Joi.string().optional(),
+		date: Joi.string(),
 		files: Joi.any()
 	});
 }

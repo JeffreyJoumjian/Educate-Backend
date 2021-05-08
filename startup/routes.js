@@ -5,6 +5,7 @@ const coursesRouter = require('../routes/courses');
 const sectionsRouter = require('../routes/sections');
 const assignmentsRouter = require('../routes/assignments');
 const instructorsRouter = require('../routes/instructors');
+const studentsRouter = require('../routes/students');
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -20,5 +21,6 @@ module.exports = function (app) {
 	app.use('/api/sections', sectionsRouter);
 	app.use('/api/assignments', assignmentsRouter);
 	app.use('/api/instructors', instructorsRouter);
+	app.use('/api/students', studentsRouter);
 	app.use('*', (req, res) => res.redirect('/'));
 }

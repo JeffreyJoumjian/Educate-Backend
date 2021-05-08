@@ -33,4 +33,7 @@ const semesters = [
 	'Fall 2021'
 ]
 
-module.exports = { departments, schools, titles, semesters };
+
+const supportedFileTypes = ['pdf', 'png', 'jpg', 'txt'];
+
+module.exports = { departments, schools, titles, semesters, supportedFileTypes };

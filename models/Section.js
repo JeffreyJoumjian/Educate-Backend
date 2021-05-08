@@ -9,11 +9,11 @@ const sectionSchema = new Schema({
 	course: {
 		type: Schema.Types.ObjectId,
 		ref: 'Course',
-		require: true
+		required: true
 	},
 	CRN: {
 		type: Number,
-		require: true,
+		required: true,
 		unique: true,
 	},
 	capacity: { type: Number, min: 1, max: 40, default: 20 },

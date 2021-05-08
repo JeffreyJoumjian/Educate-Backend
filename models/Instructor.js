@@ -36,7 +36,7 @@ const instructorSchema = new Schema({
 
 const Instructor = model('Instructor', instructorSchema);
 
-function validateInstructorSchema(isNew) {
+function validateInstructorSchema(isNew = true) {
 
 	return Joi.object({
 		instructor_id: !isNew ? Joi.objectId().required() : Joi.objectId(),
