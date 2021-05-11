@@ -2,6 +2,7 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 
 const { Student } = require('../models/Student');
+const { Section } = require('../models/Section');
 const isValidObjectId = require('../utils/validateObjectId');
 
 const studentController = {
@@ -15,7 +16,7 @@ const studentController = {
 		if (!isValidObjectId(student_id))
 			return res.status(400).send("Invalid ID");
 
-		let student = await Student.findById(student_id);
+		let student = await Student.findById(student_id).populate('studentSections');
 
 		if (!student)
 			return res.status(404).send("The student with the given ID was not found");
@@ -89,7 +90,98 @@ const studentController = {
 		catch (e) {
 			return res.status(500).send(e.message);
 		}
-	}
+	},
+
+	getStudentSections: async (req, res) => {
+		try {
+			let student_id = req.params.student_id;
+
+			if (!isValidObjectId(student_id))
+				return res.status(400).send("Invalid ID");
+
+			let student = await Student.findById(student_id);
+
+			if (!student)
+				return res.status(404).send("The student with the given ID was");
+
+			return res.status(200).json(student.studentSections);
+		}
+		catch (e) {
+			return res.status(400).send(e.message);
+		}
+	},
+
+	addStudentSection: async (req, res) => {
+		try {
+			let student_id = req.params.student_id;
+			let section_id = req.params.section_id;
+
+			if (!isValidObjectId(student_id) || !isValidObjectId(section_id))
+				return res.status(400).send("Invalid ID");
+
+			let student = await Student.findById(student_id);
+
+			if (!student)
+				return res.status(404).send("The instructor with the given ID was not found");
+
+			let section = await Section.findById(section_id);
+
+			if (!section)
+				return res.status(404).send("The section with the given ID was not found");
+
+			if (student.studentSections.findIndex(section => section === section_id) === -1) {
+				student.studentSections.push(section_id);
+				section.students.push(student_id);
+			}
+
+			student = (await student.save()).populate('studentSections');
+			section = await section.save();
+
+			return res.status(201).json(student);
+		}
+		catch (e) {
+			return res.status(400).send(e.message);
+		}
+	},
+	removeStudentSection: async (req, res) => {
+		try {
+			let student_id = req.params.student_id;
+			let section_id = req.params.section_id;
+
+			if (!isValidObjectId(student_id) || !isValidObjectId(section_id))
+				return res.status(400).send("Invalid ID");
+
+			let student = await Instructor.findById(student_id);
+
+			if (!student)
+				return res.status(404).send("The instructor with the given ID was not found");
+
+			let section = await Section.findById(section_id);
+
+			if (!section)
+				return res.status(404).send("The section with the given ID was not found");
+
+			// remove section from instructor teaching sections
+			student.studentSections.splice(
+				student.studentSections.findIndex(section => section === section_id), 1
+			);
+
+			// remove instructor from section's instructors
+			section.students.splice(
+				section.students.findIndex(instructor => instructor === student_id), 1
+			);
+
+			section.students.push(student_id);
+
+			student = (await student.save()).populate('teachingSections');
+			section = await section.save();
+
+			return res.status(201).json(student);
+		}
+		catch (e) {
+			return res.status(400).send(e.message);
+		}
+	},
 
 };
 
