@@ -1,3 +1,4 @@
+const { isBefore, isAfter, parse, format } = require('date-fns');
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
@@ -23,6 +24,7 @@ const assignmentSchema = new Schema({
 		max: 100,
 		default: 10
 	},
+	// "04/07/2021 04:58 PM"
 	startDate: { type: String, required: true },
 	startTime: { type: String, required: true },
 	endDate: { type: String, required: true },
@@ -31,7 +33,7 @@ const assignmentSchema = new Schema({
 	visibility: { type: String, enum: assignmentVisibilityTypes },
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
-	allowMultipleSubmission: { type: Boolean, default: true },
+	allowMultipleSubmissions: { type: Boolean, default: true },
 	path: { type: String, required: true, default: '/' },
 	files: [{
 		fileName: { type: String, required: true },
@@ -44,7 +46,22 @@ const assignmentSchema = new Schema({
 	}]
 });
 
+assignmentSchema.methods.setIsActive = function () {
+	// let date1 = parse("04/07/2021 04:58 PM", "dd/MM/yyyy p", Date.now());
+	// let date2 = parse("04/07/2021 04:58 PM", "dd/MM/yyyy p", Date.now());
+
+	let startDate = parse(`${this.startDate} ${this.startTime}`, 'dd/MM/yyyy p', Date.now());
+	let endDate = parse(`${this.endDate} ${this.endTime}`, 'dd/MM/yyyy p', Date.now());
+	let currentDate = format(parseISO((new Date).toISOString()), "dd/MM/yyyy p");
+
+	if (isAfter(startDate, currentDate) && isBefore(currentDate, endDate))
+		return this.isActive = true;
+
+	return this.isActive = false;
+};
+
 const Assignment = model('Assigment', assignmentSchema);
+
 
 function validateAssignmentSchema(isNew = true) {
 	return Joi.object({

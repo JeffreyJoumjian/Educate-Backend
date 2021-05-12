@@ -5,6 +5,7 @@ const { Student } = require('../models/Student');
 const { Instructor } = require('../models/Instructor');
 const { Submission } = require('../models/Submission');
 const { Assignment } = require('../models/Assignment');
+const { assign } = require('lodash');
 
 const submissionController = {
 	getSubmissionById: async (req, res) => {
@@ -20,7 +21,7 @@ const submissionController = {
 
 		return res.status(200).json(submission);
 	},
-	getSubmissionsByAssignmentId: (req, res) => {
+	getSubmissionsByAssignmentId: async (req, res) => {
 		let assignment_id = req.params.assignment_id;
 
 		if (!isValidObjectId(assignment_id))
@@ -38,15 +39,98 @@ const submissionController = {
 
 		return res.status(200).json(submissions);
 	},
-	getStudentSubmissionByAssignmentId: (req, res) => {
+	getStudentSubmissionByAssignmentId: async (req, res) => {
+		let assignment_id = req.params.assignment_id;
+		let student_id = req.params.student_id;
 
+		if (!isValidObjectId(assignment_id) || !isValidObjectId(student_id))
+			return res.status(400).send("Invalid ID");
+
+		let assignment = await Assignment.find()
+			.and([{ assignment: assignment_id }, { student: student_id }])
+			.populate('assignment');
+
+		if (!assignment)
+			return res.status(404).send("The assignment with the given ID was not found");
+
+		return res.status(200).json(assignment);
 	},
 
-	createSubmission: async (req, res) => {
+	// ADD file checking
+	// FIX check if student is in section before submitting
+	submitAssignment: async (req, res) => {
+		try {
+			let assigmnent_id = req.body.assigmnent_id;
+			let student_id = req.body.student_id;
 
+			if (!isValidObjectId(assigmnent_id) || !isValidObjectId(student_id))
+				return res.status(400).send("Invalid ID");
+
+			let assignment = await Assignment.findById(assignment_id);
+
+			if (!assignment)
+				return res.status(404).send("The assignment with the given ID was not found");
+
+			let student = await Student.findById(student_id);
+
+			if (!student)
+				return res.status(404).send("The student with the given ID was not found");
+
+			// check if student has already submitted
+			let submission = await Submission.findOne({ student: student_id, assignment: assignment_id });
+
+			// FIX check for late submission
+			assigmnent.setIsActive();
+			assignment = await assignment.save();
+
+			const { isActive, allowLateSubmissions, allowMultipleSubmissions } = assignment;
+
+			if (isActive || allowLateSubmissions) {
+				// if student has already submitted => if multiple submissions, update submission else prevent
+				if (!submission) {
+
+					submission = new Submission(_.pick(req.body,
+						['assignment', 'student', 'grade', 'date', 'files']
+					));
+
+					return res.status(201).json(await submission.save());
+				}
+				else if (submission && allowMultipleSubmissions) {
+					submission = { ...req.body }; // update available properties and add new ones
+
+					return res.status(201).json(await submission.save());
+				}
+				else {
+					return res.status(400).send("Assigment does not allow multiple submissions");
+				}
+			}
+			return res.status(400).send("Assigment does not allow late submissions or is not active");
+		}
+		catch (e) {
+			return res.status(500).send(e.message);
+		}
 	},
-	updateSubmissionInfo: async (req, res) => {
 
+	gradeSubmission: async (req, res) => {
+		try {
+			let submission_id = req.body.submission_id;
+
+			if (!isValidObjectId(submission_id))
+				return res.status(400).send("Invalid ID");
+
+			let submission = await Submission.findById();
+
+			if (!submission)
+				return res.status(404).send("The submission with the given ID was not found");
+
+			submission = { ..._.pick(['grade', 'comments']) };
+			submission.isGraded = true;
+
+			return res.status(201).json(await submission.save());
+		}
+		catch (e) {
+			return res.status(500).send(e.message);
+		}
 	}
 };
 

@@ -10,7 +10,7 @@ const submissionSchema = new Schema({
 	grade: { type: Number, min: 0, max: 100, default: 0 },
 	isGraded: { type: Boolean, default: false },
 	comments: { type: String },
-	date: { type: String, default: (new Date()).toUTCString() },
+	date: { type: String, default: (new Date()).toISOString() },
 	files: [{
 		fileName: { type: String, required: true },
 		fileType: {
