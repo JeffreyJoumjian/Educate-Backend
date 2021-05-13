@@ -1,17 +1,17 @@
-const { isBefore, isAfter, parse, format } = require('date-fns');
+const { isBefore, isAfter, parse, parseISO, format } = require('date-fns');
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-const { supportedFileTypes } = require('../utils/universityData');
-const assignentTypes = ['exam', 'quiz', 'paper', 'project', 'assignment'];
+// const { supportedFileTypes } = require('../utils/universityData');
+const assignmentTypes = ['exam', 'quiz', 'paper', 'project', 'assignment'];
 const assignmentVisibilityTypes = ["manual", "automatic"];
 
 const assignmentSchema = new Schema({
 	section: { type: Schema.Types.ObjectId, ref: 'Section' },
 	name: { type: String, required: true },
 	description: { type: String },
-	type: { type: String, enum: assignentTypes },
+	type: { type: String, enum: assignmentTypes },
 	maxGrade: {
 		type: Number,
 		min: 0,
@@ -36,10 +36,11 @@ const assignmentSchema = new Schema({
 	allowMultipleSubmissions: { type: Boolean, default: true },
 	path: { type: String, required: true, default: '/' },
 	files: [{
-		fileName: { type: String, required: true },
-		fileType: {
+		name: { type: String, required: true },
+		size: { type: Number, required: true },
+		type: {
 			type: String,
-			enum: supportedFileTypes,
+			// enum: supportedFileTypes,
 			required: true
 		},
 		data: { type: Buffer, required: true }
@@ -52,7 +53,7 @@ assignmentSchema.methods.setIsActive = function () {
 
 	let startDate = parse(`${this.startDate} ${this.startTime}`, 'dd/MM/yyyy p', Date.now());
 	let endDate = parse(`${this.endDate} ${this.endTime}`, 'dd/MM/yyyy p', Date.now());
-	let currentDate = format(parseISO((new Date).toISOString()), "dd/MM/yyyy p");
+	let currentDate = parseISO(new Date().toISOString(), "dd/MM/yyyy p");
 
 	if (isAfter(startDate, currentDate) && isBefore(currentDate, endDate))
 		return this.isActive = true;
@@ -60,7 +61,7 @@ assignmentSchema.methods.setIsActive = function () {
 	return this.isActive = false;
 };
 
-const Assignment = model('Assigment', assignmentSchema);
+const Assignment = model('Assignment', assignmentSchema);
 
 
 function validateAssignmentSchema(isNew = true) {
@@ -69,13 +70,14 @@ function validateAssignmentSchema(isNew = true) {
 		section: isNew ? Joi.objectId().required() : Joi.objectId(),
 		name: isNew ? Joi.string().required() : Joi.string(),
 		description: Joi.string(),
-		type: Joi.string().valid(...assignentTypes),
+		type: Joi.string().valid(...assignmentTypes),
 		maxGrade: Joi.number().min(0).max(100),
 		gradePercentage: Joi.number().min(0).max(100),
 		startDate: isNew ? Joi.string().required() : Joi.string(),
 		startTime: isNew ? Joi.string().required() : Joi.string(),
 		endDate: isNew ? Joi.string().required() : Joi.string(),
 		endTime: isNew ? Joi.string().required() : Joi.string(),
+		isActive: Joi.boolean(),
 		visibility: Joi.string().valid(...assignmentVisibilityTypes),
 		isVisible: Joi.boolean(),
 		allowLateSubmissions: Joi.boolean(),

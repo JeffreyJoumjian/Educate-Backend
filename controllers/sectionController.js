@@ -85,9 +85,7 @@ const assignmentController = {
 				const { gradePercentage } = assignment;
 
 				let submission = await
-					Submission.find()
-						.and([{ assignment }, { student: student_id }])
-						.sort('createdAt')[0];
+					Submission.findOne({ assignment, student: student_id });
 
 				if (submission)
 					totalGrade += (submission.grade * gradePercentage).toFixed(2);
@@ -122,10 +120,7 @@ const assignmentController = {
 				for (let assignment of section.assignments) {
 					const { gradePercentage } = assignment;
 
-					let submission = await Submission.find()
-						.and([{ assignment }, { student: student._id }])
-						.sort('createdAt')[0];
-
+					let submission = await Submission.findOne({ assignment, student: student_id });
 					if (submission)
 						totalGrade += (submission.grade * gradePercentage).toFixed(2);
 				}

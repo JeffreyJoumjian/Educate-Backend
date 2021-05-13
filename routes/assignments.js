@@ -16,11 +16,11 @@ router.post('/', validator.body(validateAssignmentSchema()), (req, res) => {
 	assignmentController.createAssignment(req, res);
 });
 
-router.put('/', validator.body(validateAssignmentSchema()), (req, res) => {
+router.put('/', validator.body(validateAssignmentSchema(false)), (req, res) => {
 	assignmentController.updateAssignmentInfo(req, res);
 });
 
-router.delete('/', validator.body(validateAssignmentSchema()), (req, res) => {
+router.delete('/', (req, res) => {
 	assignmentController.deleteAssignmentById(req, res);
 });
 

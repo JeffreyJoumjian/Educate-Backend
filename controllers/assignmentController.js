@@ -4,6 +4,28 @@ const isValidObjectId = require('../utils/validateObjectId');
 const { Assignment } = require('../models/Assignment');
 const { Section } = require('../models/Section');
 
+function attachFiles(req, res, assignment) {
+
+	if (req.files && req.files.files) {
+		// get uploaded files
+		let sentFiles = [];
+		sentFiles.push(req.files.files);
+		sentFiles = sentFiles.flat(1); // flatten files to 1 array
+
+
+		sentFiles.forEach(sentFile => {
+			const { name, mimetype: type, size, data } = sentFile;
+
+			// overwrite duplicates by removing them
+			assignment.files = assignment.files.filter(file => file.name !== sentFile.name);
+
+			assignment.files.push({
+				name, type, size, data
+			});
+		});
+	}
+}
+
 const assignmentController = {
 	getAllAssignments: async (req, res) => {
 		return res.status(200).send(await Assignment.find());
@@ -41,7 +63,7 @@ const assignmentController = {
 		try {
 			const { name, section: section_id } = req.body;
 
-			if (!(isValidObjectId(assignment_id) && isValidObjectId(section)))
+			if (!(isValidObjectId(section_id)))
 				return res.status(400).send("Invalid ID");
 
 			let section = await Section.findById(section_id);
@@ -52,7 +74,7 @@ const assignmentController = {
 			let assignment = await Assignment.findOne({ name });
 
 			if (assignment)
-				return res.status(404).send("A assignment with the same name already exists");
+				return res.status(404).send("An assignment with the same name already exists");
 
 			// otherwise create assignment
 			assignment = new Assignment(
@@ -62,9 +84,11 @@ const assignmentController = {
 					'maxGrade', 'gradePercentage',
 					'startDate', 'startTime', 'endDate', 'endTime',
 					'visibility', 'isVisible',
-					'allowLateSubmissions', 'allowMultipleSubmissions', 'files'
+					'allowLateSubmissions', 'allowMultipleSubmissions'
 				])
 			);
+
+			attachFiles(req, res, assignment);
 
 			await assignment.save();
 
@@ -89,10 +113,12 @@ const assignmentController = {
 				return res.status(404).send("The assignment with the given ID does not exist");
 
 			for (let prop in req.body)
-				if (prop !== "assignment_id")
+				if (prop !== "assignment_id" && prop !== "files")
 					assignment[prop] = req.body[prop];
 
-			await assignment_id.save();
+			attachFiles(req, res, assignment);
+
+			await assignment.save();
 
 			return res.status(201).json(assignment);
 		}

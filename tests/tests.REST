@@ -145,3 +145,35 @@ Content-Type: application/json
 # ASSIGNMENTS
 ### 
 GET http://localhost:3000/api/assignments/
+
+### CREATE NEW ASSIGNMENT
+# SUBMIT THIS USING filesTest.html
+POST http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"section": "60954f2642150e087e5057c6",
+	"name":"Test Assignment",
+	"description":"This is a test assignment",
+	"type":"assignment",
+	"maxGrade":100,
+	"gradePercentage":10,
+	"startDate": "13/05/2021",
+	"startTime": "12:01 AM",
+	"endDate": "16/05/2021",
+	"endTime": "11:59 PM",
+	"isActive":true, 
+	"visibility":"automatic",
+	"allowLateSubmissions": true, 
+	"allowMultipleSubmissions": true
+}
+
+### UPDATE ASSIGNMENT 
+PUT http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"assignment_id":"609c4ed3407d3a12b8d397fe",
+	"endDate": "16/05/2021",
+	"endTime":"11:59 PM"
+}
