@@ -35,16 +35,7 @@ const assignmentSchema = new Schema({
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmissions: { type: Boolean, default: true },
 	path: { type: String, required: true, default: '/' },
-	files: [{
-		name: { type: String, required: true },
-		size: { type: Number, required: true },
-		type: {
-			type: String,
-			// enum: supportedFileTypes,
-			required: true
-		},
-		data: { type: Buffer, required: true }
-	}]
+	files: { type: [Schema.Types.ObjectId], ref: 'File' }
 });
 
 assignmentSchema.methods.setIsActive = function () {

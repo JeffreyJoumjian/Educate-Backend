@@ -177,3 +177,23 @@ Content-Type: application/json
 	"endDate": "16/05/2021",
 	"endTime":"11:59 PM"
 }
+
+# LOGGIN IN
+### POST LOGIN
+POST http://localhost:3000/api/logins/
+Content-Type: application/json
+
+{
+	"email":"jeffrey.joumjian@instructor.com",
+	"password":"test"
+}
+
+
+### POST LOGIN
+POST http://localhost:3000/api/logins/
+Content-Type: application/json
+
+{
+	"email":"jeffrey.joumjian@student.com",
+	"password":"test"
+}

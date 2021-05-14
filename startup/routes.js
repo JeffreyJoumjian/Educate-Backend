@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 
+const loginsRouter = require('../routes/logins');
 const coursesRouter = require('../routes/courses');
 const sectionsRouter = require('../routes/sections');
 const assignmentsRouter = require('../routes/assignments');
@@ -26,6 +27,7 @@ module.exports = function (app) {
 		res.status(200).send("home");
 	});
 
+	app.use('/api/logins', loginsRouter);
 	app.use('/api/courses', coursesRouter);
 	app.use('/api/sections', sectionsRouter);
 	app.use('/api/assignments', assignmentsRouter);
