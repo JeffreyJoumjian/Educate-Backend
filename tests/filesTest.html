@@ -49,8 +49,11 @@
 	});
 
 	async function createAssignemnt() {
+
+		// create form data
 		let formData = new FormData();
 
+		// data you want to send to route
 		let assignment = {
 			section: "60954f2642150e087e5057c6",
 			name: "Test Assignment",
@@ -76,6 +79,7 @@
 		for (let i = 0; i < inputFile.files.length; i++) {
 			formData.append('files', inputFile.files[i]);
 		}
+
 		let res = await fetch('http://localhost:3000/api/assignments/', {
 			method: 'POST',
 			body: formData
