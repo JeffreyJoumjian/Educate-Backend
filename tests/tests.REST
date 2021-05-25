@@ -22,7 +22,7 @@ content-type: application/json
 	"email": "test2@test.com",
 	"phone": "01234567",
 	"password": "test",
-	"teachingCourses": [],
+	"teachingSections": [],
 	"department": "Arts and Sciences"
 }
 
@@ -78,7 +78,7 @@ POST http://localhost:3000/api/sections/
 Content-Type: application/json
 
 {
-	"course_id": "60904afc24a2bc16836a032f",
+	"course_id": "60ad3a52c43d1a2d74cf0821",
 	"CRN": "00001",
 	"semester": "Spring 2021",
 	"startDate":"January 20, 2021",

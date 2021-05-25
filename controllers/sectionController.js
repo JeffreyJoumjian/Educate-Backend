@@ -170,16 +170,15 @@ const assignmentController = {
 			if (section)
 				return res.status(400).send("Section with that CRN already exists");
 
-			section = new Section(
-				_.pick(req.body, [
-					'course_id', 'CRN',
-					'capacity',
-					'semester',
-					'startDate', 'endDate', 'schedule',
-					'instructors', 'students',
-					'assignments'
-				])
-			);
+			const { CRN, capacity,
+				semester, startDate, endDate, schedule,
+				instructors, students, assignments } = req.body;
+
+			section = new Section({
+				course: course._id, CRN, capacity,
+				semester, startDate, endDate, schedule,
+				instructors, students, assignments
+			});
 
 			await section.save();
 
