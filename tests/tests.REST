@@ -71,7 +71,7 @@ GET  http://localhost:3000/api/sections/all/60904afc24a2bc16836a032f
 GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c
 
 ### GET STUDENTS BY SECTION ID
-GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c/students
+GET http://localhost:3000/api/sections/60ad3b6f5524c70bafe78ad0/students
 
 ### GET INSRUCTORS BY SECTION ID
 GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c/instructors

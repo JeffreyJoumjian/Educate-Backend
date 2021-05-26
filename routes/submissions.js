@@ -8,6 +8,7 @@ router.get('/', (req, res) => res.status(200).send("Submissions"));
 
 router.get('/:submission_id', (req, res) => submissionController.getSubmissionById(req, res));
 router.get('/:assignment_id', (req, res) => submissionController.getSubmissionsByAssignmentId(req, res));
+
 router.get('/:student_id/assignment/:assignment_id', (req, res) => {
 	submissionController.getStudentSubmissionByAssignmentId(req, res)
 });

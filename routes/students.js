@@ -16,9 +16,7 @@ router.post('/', validator.body(validateStudentSchema()), (req, res) => {
 });
 
 
-router.put('/', validator.body(validateStudentSchema(false)), (req, res) => {
-	studentController.updateStudentInfo(req, res);
-});
+router.put('/', validator.body(validateStudentSchema(false)), (req, res) => studentController.updateStudentInfo(req, res));
 router.put('/:student_id/courses/:section_id', (req, res) => studentController.addStudentSection(req, res));
 
 router.delete('/', (req, res) => studentController.deleteStudentById(req, res));
