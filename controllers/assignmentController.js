@@ -10,6 +10,22 @@ const assignmentController = {
 		return res.status(200).send(await Assignment.find());
 	},
 
+	getAllAssignmentsBySectionId: async (req, res) => {
+		let section_id = req.params.section_id;
+
+		if (!isValidObjectId(section_id))
+			return res.status(400).send("Invalid ID");
+
+		let section = await Section.findById(section_id);
+
+		if (!section)
+			return res.status(404).send("The section with the given ID was not found");
+
+		let assignments = await Assignment.find({ section: section_id });
+
+		return res.status(200).json(assignments);
+	},
+
 	getAssignmentById: async (req, res) => {
 		let assignment_id = req.params.assignment_id;
 

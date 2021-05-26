@@ -147,8 +147,11 @@ Content-Type: application/json
 }
 
 # ASSIGNMENTS
-### 
+### GET ALL ASSIGNMENTS
 GET http://localhost:3000/api/assignments/
+
+### GET ALL ASSIGNMENTS FOR A SECTION
+GET http://localhost:3000/api/assignments/60ad3b6f5524c70bafe78ad0/all
 
 ### CREATE NEW ASSIGNMENT
 # SUBMIT THIS USING filesTest.html

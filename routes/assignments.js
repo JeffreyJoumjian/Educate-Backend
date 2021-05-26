@@ -10,6 +10,8 @@ router.get('/', (req, res) => res.status(200).send("assignments"));
 
 router.get('/all', (req, res) => assignmentController.getAllAssignments(req, res));
 
+router.get('/:section_id/all', (req, res) => assignmentController.getAllAssignmentsBySectionId(req, res));
+
 router.get('/:assignment_id', (req, res) => assignmentController.getAssignmentById(req, res));
 
 router.post('/', validator.body(validateAssignmentSchema()), (req, res) => {

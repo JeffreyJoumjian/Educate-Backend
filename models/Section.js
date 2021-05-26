@@ -25,7 +25,7 @@ const sectionSchema = new Schema({
 	schedule: { type: String },
 	instructors: { type: [Schema.Types.ObjectId], ref: 'Instructor' },
 	students: { type: [Schema.Types.ObjectId], ref: 'Student' },
-	assignments: { type: [Schema.Types.ObjectId], ref: 'Assignment' },
+	// assignments: { type: [Schema.Types.ObjectId], ref: 'Assignment' },
 	fileHierarchy: { type: FileHierarchySchema }
 
 });
