@@ -103,10 +103,17 @@ const instructorController = {
 			if (!isValidObjectId(instructor_id))
 				return res.status(400).send("Invalid ID");
 
-			let instructor = await Instructor.findById(instructor_id).populate('teachingSections');
+			let instructor = await Instructor
+				.findById(instructor_id)
+				.populate({
+					path: 'teachingSections',
+					populate: { path: 'course' }
+				});
+
 
 			if (!instructor)
-				return res.status(404).send("The instructor with the given ID was not found")
+				return res.status(404).send("The instructor with the given ID was not found");
+
 
 			return res.status(200).json(instructor.teachingSections);
 		}

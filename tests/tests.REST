@@ -12,6 +12,10 @@ GET http://localhost:3000/api/instructors/all
 ### GET INSTRUCTORY BY ID
 GET http://localhost:3000/api/instructors/608c3fe2c2295f5315c02797 
 
+### GET INSTRUCTOR SECTIONS
+GET http://localhost:3000/api/instructors/60ad3a09c43d1a2d74cf0820/sections
+
+
 ### CREATE INSTRUCTOR
 POST http://localhost:3000/api/instructors HTTP/1.1
 content-type: application/json
@@ -79,12 +83,12 @@ Content-Type: application/json
 
 {
 	"course_id": "60904afc24a2bc16836a032f",
-	"CRN": "00001",
+	"CRN": "00002",
 	"semester": "Spring 2021",
 	"startDate":"January 20, 2021",
 	"endDate":"May 28, 2021",
 	"schedule":"MWF 10:00 AM 11:00 AM",
-	"instructors": ["6090307bfbc01c1145aaddc7"]
+	"instructors": ["60ae7dac8b6c3e07e92e8d09"]
 }
 
 ### UPDATE SECTION
