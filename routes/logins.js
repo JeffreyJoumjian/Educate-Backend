@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
 	try {
 		const token = generateLoginToken(user);
 
-		return res.cookie('educate_login_token', { httpOnly: true }).send(token);
+		return res.cookie('educate_login_token', { httpOnly: true }).json({ token, userType });
 	}
 	catch (e) {
 		return res.status(500).send(e.message);

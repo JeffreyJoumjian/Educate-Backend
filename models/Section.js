@@ -4,6 +4,8 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const { semesters } = require('../utils/universityData');
 
+const { FileHierarchySchema } = require('./FileHierarchy');
+
 // SUGGESTION maybe create a semester object
 const sectionSchema = new Schema({
 	course: {
@@ -23,7 +25,21 @@ const sectionSchema = new Schema({
 	schedule: { type: String },
 	instructors: { type: [Schema.Types.ObjectId], ref: 'Instructor' },
 	students: { type: [Schema.Types.ObjectId], ref: 'Student' },
-	assignments: { type: [Schema.Types.ObjectId], ref: 'Assignment' }
+	assignments: { type: [Schema.Types.ObjectId], ref: 'Assignment' },
+	fileHierarchy: { type: FileHierarchySchema }
+
+});
+
+sectionSchema.pre('save', function () {
+	if (!this.fileHierarchy) {
+		this.fileHierarchy = {
+			path: "root",
+			name: "",
+			type: "folder",
+			data: null,
+			children: []
+		};
+	}
 
 });
 
@@ -40,7 +56,8 @@ function validateSectionSchema(isNew = true) {
 		endDate: Joi.string(),
 		schedule: Joi.string(),
 		instructors: Joi.array().items(Joi.objectId()),
-		students: Joi.array().items(Joi.objectId())
+		students: Joi.array().items(Joi.objectId()),
+		fileHierarchy: Joi.objectId()
 	});
 }
 

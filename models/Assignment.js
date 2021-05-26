@@ -34,7 +34,7 @@ const assignmentSchema = new Schema({
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmissions: { type: Boolean, default: true },
-	path: { type: String, required: true, default: '/' },
+	// path: { type: String, required: true, default: '/' },
 	files: { type: [Schema.Types.ObjectId], ref: 'File' }
 });
 

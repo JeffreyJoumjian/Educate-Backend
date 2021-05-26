@@ -6,6 +6,7 @@ const fileUpload = require('express-fileupload');
 const loginsRouter = require('../routes/logins');
 const coursesRouter = require('../routes/courses');
 const sectionsRouter = require('../routes/sections');
+const fileHierarchiesRouter = require('../routes/fileHierarchies');
 const assignmentsRouter = require('../routes/assignments');
 const submissionsRouter = require('../routes/submissions');
 const instructorsRouter = require('../routes/instructors');
@@ -30,9 +31,11 @@ module.exports = function (app) {
 	app.use('/api/logins', loginsRouter);
 	app.use('/api/courses', coursesRouter);
 	app.use('/api/sections', sectionsRouter);
+	app.use('/api/hierarchies', fileHierarchiesRouter);
 	app.use('/api/assignments', assignmentsRouter);
 	app.use('/api/submissions', submissionsRouter);
 	app.use('/api/instructors', instructorsRouter);
 	app.use('/api/students', studentsRouter);
 	app.use('*', (req, res) => res.redirect('/'));
+
 }

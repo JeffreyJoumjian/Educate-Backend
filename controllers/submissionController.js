@@ -2,9 +2,9 @@ const _ = require('lodash');
 const isValidObjectId = require('../utils/validateObjectId');
 
 const { Student } = require('../models/Student');
-const { Instructor } = require('../models/Instructor');
 const { Submission } = require('../models/Submission');
 const { Assignment } = require('../models/Assignment');
+const fileController = require('./fileController');
 
 function attachFiles(req, res, submission, clearFiles = false) {
 	if (clearFiles)
@@ -123,7 +123,7 @@ const submissionController = {
 						date: req.body.date
 					});
 
-					attachFiles(req, res, submission);
+					fileController.attachFiles(req, res, submission);
 
 					return res.status(201).json(await submission.save());
 				}
@@ -133,7 +133,7 @@ const submissionController = {
 						if (prop !== "files")
 							submission[prop] = req.body[prop];
 
-					attachFiles(req, res, submission, true);
+					fileController.attachFiles(req, res, submission, true);
 
 					return res.status(201).json(await submission.save());
 				}

@@ -78,7 +78,7 @@ POST http://localhost:3000/api/sections/
 Content-Type: application/json
 
 {
-	"course_id": "60ad3a52c43d1a2d74cf0821",
+	"course_id": "60904afc24a2bc16836a032f",
 	"CRN": "00001",
 	"semester": "Spring 2021",
 	"startDate":"January 20, 2021",
@@ -92,7 +92,7 @@ PUT http://localhost:3000/api/sections/
 Content-Type: application/json
 
 {
-	"section_id": "60905bc9aef14f1acbb2ac6c",
+	"section_id": "60954f2642150e087e5057c6",
 	"schedule":"MWF 10:00 AM 10:50 AM"
 }
 ### DELETE SECTION
@@ -196,4 +196,41 @@ Content-Type: application/json
 {
 	"email":"jeffrey.joumjian@student.com",
 	"password":"test"
+}
+
+
+# FILE HIERARCHY
+### GET FOLDER HIERARCHY
+GET http://localhost:3000/api/hierarchies/60add6912000ca23f2b543b4/?path=root/Assignments
+
+
+### ADD FOLDER TO HIERARCHY
+POST http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"section_id": "60add6912000ca23f2b543b4",
+	"parentPath":"root/Assignments",
+	"type": "folder",
+	"name":"exam 1"
+}
+### ADD Assignment TO HIERARCHY
+POST http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"assignment_id":"609c4ed3407d3a12b8d397fe",
+	"section_id": "60add6912000ca23f2b543b4",
+	"parentPath":"root/Assignments",
+	"type": "assignment",
+	"name":"exam 1 submission"
+}
+
+### REMOVE FOLDER TO HIERARCHY
+DELETE http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"section_id": "60add6912000ca23f2b543b4",
+	"path": "root/Assignments"
 }

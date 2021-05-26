@@ -3,28 +3,7 @@ const isValidObjectId = require('../utils/validateObjectId');
 
 const { Assignment } = require('../models/Assignment');
 const { Section } = require('../models/Section');
-
-function attachFiles(req, res, assignment) {
-
-	if (req.files && req.files.files) {
-		// get uploaded files
-		let sentFiles = [];
-		sentFiles.push(req.files.files);
-		sentFiles = sentFiles.flat(1); // flatten files to 1 array
-
-
-		sentFiles.forEach(sentFile => {
-			const { name, mimetype: type, size, data } = sentFile;
-
-			// overwrite duplicates by removing them
-			assignment.files = assignment.files.filter(file => file.name !== sentFile.name);
-
-			assignment.files.push({
-				name, type, size, data
-			});
-		});
-	}
-}
+const fileController = require('./fileController');
 
 const assignmentController = {
 	getAllAssignments: async (req, res) => {
@@ -88,7 +67,7 @@ const assignmentController = {
 				])
 			);
 
-			attachFiles(req, res, assignment);
+			fileController.attachFiles(req, res, assignment);
 
 			await assignment.save();
 
@@ -116,7 +95,7 @@ const assignmentController = {
 				if (prop !== "assignment_id" && prop !== "files")
 					assignment[prop] = req.body[prop];
 
-			attachFiles(req, res, assignment);
+			fileController.attachFiles(req, res, assignment);
 
 			await assignment.save();
 
