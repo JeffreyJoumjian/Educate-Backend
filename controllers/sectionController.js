@@ -47,7 +47,15 @@ const assignmentController = {
 		if (!isValidObjectId(section_id))
 			return res.status(400).send("Invalid ID");
 
-		let section = await Section.findById(section_id).populate('course').populate('students');
+		let section = await Section
+			.findById(section_id)
+			.populate('course')
+			.populate({
+				path: 'students',
+				populate: {
+					path: 'studentSections'
+				}
+			});
 
 		if (!section)
 			return res.status(404).send("The section with the given ID does not exist");
