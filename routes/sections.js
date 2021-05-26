@@ -2,6 +2,7 @@ const router = require('express').Router();
 const validator = require('express-joi-validation').createValidator({});
 
 const sectionController = require('../controllers/sectionController');
+const studentController = require('../controllers/studentController');
 const { validateSectionSchema } = require('../models/Section');
 
 
@@ -18,6 +19,8 @@ router.get('/:section_id/instructors', (req, res) => sectionController.getInstru
 
 router.get('/:section_id/grades/:student_id', (req, res) => sectionController.calculateStudentTotalGrade(req, res));
 router.get('/:section_id/grades/all', (req, res) => sectionController.calculateAllStudentsTotalGrade(req, res));
+
+router.put('/students/add/:student_id', (req, res) => studentController.addStudentSection(req, res));
 
 router.post('/', validator.body(validateSectionSchema()), (req, res) => {
 	sectionController.createSection(req, res);
