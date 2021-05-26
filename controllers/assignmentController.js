@@ -15,7 +15,6 @@ const assignmentController = {
 
 		if (!isValidObjectId(section_id))
 			return res.status(400).send("Invalid ID");
-
 		let section = await Section.findById(section_id);
 
 		if (!section)
