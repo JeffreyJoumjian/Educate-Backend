@@ -6,30 +6,6 @@ const { Submission } = require('../models/Submission');
 const { Assignment } = require('../models/Assignment');
 const fileController = require('./fileController');
 
-function attachFiles(req, res, submission, clearFiles = false) {
-	if (clearFiles)
-		submission.files = [];
-
-	// get uploaded files
-	let sentFiles = [];
-	sentFiles.push(req.files.files);
-	sentFiles = sentFiles.flat(1); // flatten files to 1 array
-
-
-	sentFiles.forEach(sentFile => {
-		const { name, mimetype: type, size, data } = sentFile;
-
-		// overwrite duplicates by removing them
-		submission.files = submission.files.filter(file => file.name !== sentFile.name);
-
-		submission.files.push({
-			name, type, size, data
-		});
-	});
-
-}
-
-
 const submissionController = {
 	getSubmissionById: async (req, res) => {
 		let submission_id = req.params.submission_id;
@@ -123,7 +99,8 @@ const submissionController = {
 						date: req.body.date
 					});
 
-					fileController.attachFiles(req, res, submission);
+					if (req?.files?.files)
+						fileController.attachFiles(req, res, submission);
 
 					return res.status(201).json(await submission.save());
 				}

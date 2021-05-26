@@ -156,7 +156,7 @@ POST http://localhost:3000/api/assignments/
 Content-Type: application/json
 
 {
-	"section": "60954f2642150e087e5057c6",
+	"section": "60ad3b6f5524c70bafe78ad0",
 	"name":"Test Assignment",
 	"description":"This is a test assignment",
 	"type":"assignment",
