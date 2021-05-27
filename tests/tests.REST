@@ -214,7 +214,7 @@ POST http://localhost:3000/api/submissions/submit
 Content-Type: application/json
 
 {
-	"assignment_id": "60ae8b313225b00b1cc94d7e",
+	"assignment_id": "60ae8c127df0b1324cc8f40e",
 	"student_id":"60ae88fed3d494432ccd6dee",
 	"textSubmission":"This is a submission for assignment 2"
 }

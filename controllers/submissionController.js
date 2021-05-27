@@ -147,7 +147,8 @@ const submissionController = {
 						if (prop !== "files")
 							submission[prop] = req.body[prop];
 
-					fileController.attachFiles(req, res, submission, true);
+					if (req?.files?.files)
+						fileController.attachFiles(req, res, submission, true);
 
 					return res.status(201).json(await submission.save());
 				}
