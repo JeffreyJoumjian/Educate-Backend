@@ -4,6 +4,7 @@ const isValidObjectId = require('../utils/validateObjectId');
 const { Student } = require('../models/Student');
 const { Submission } = require('../models/Submission');
 const { Assignment } = require('../models/Assignment');
+const { Section } = require('../models/Section');
 const fileController = require('./fileController');
 
 const submissionController = {
@@ -64,6 +65,38 @@ const submissionController = {
 		return res.status(200).json(assignment);
 	},
 
+	getAllStudentSubmissionsForSection: async (req, res) => {
+		const { section_id, student_id } = req.params;
+
+		if (!isValidObjectId(section_id) || !isValidObjectId(student_id))
+			return res.status(400).send("Invalid ID");
+
+		let section = await Section.findById(section_id);
+		let student = await Student.findById(student_id);
+
+		if (!section)
+			return res.status(404).send("The section with the given ID was not found");
+
+		if (!student)
+			return res.status(404).send("The section with the given ID was not found");
+
+		let assignments = await Assignment.find({ section: section_id });
+		let submissions = [];
+
+		for (let i = 0; i < assignments.length; i++) {
+			let assignment = assignments[i];
+
+			submissions.push(
+				await Submission.findOne({ assignment: assignment._id, student: student_id })
+					.populate('assignment').populate('student')
+			);
+
+		}
+
+		return res.status(200).json(submissions);
+
+	},
+
 	// ADD file checking
 	// FIX check if student is in section before submitting
 	submitAssignment: async (req, res) => {
@@ -96,11 +129,11 @@ const submissionController = {
 			if (isActive || allowLateSubmissions) {
 				// if student has already submitted => if multiple submissions, update submission else prevent
 				if (!submission) {
-
+					const { grade, isGraded, textSubmission, comments, date } = req.body;
 					submission = new Submission({
 						assignment: assignment_id,
 						student: student_id,
-						date: req.body.date
+						grade, isGraded, textSubmission, comments, date
 					});
 
 					if (req?.files?.files)

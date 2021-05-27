@@ -13,6 +13,10 @@ router.get('/:student_id/assignment/:assignment_id', (req, res) => {
 	submissionController.getStudentSubmissionByAssignmentId(req, res)
 });
 
+router.get('/section/:section_id/student/submissions/all/:student_id', (req, res) =>
+	submissionController.getAllStudentSubmissionsForSection(req, res)
+)
+
 router.post('/submit', validator.body(validateSubmissionSchema()), (req, res) => submissionController.submitAssignment(req, res));
 
 router.put('/grade', validator.body(validateSubmissionSchema(false)), (req, res) => submissionController.gradeSubmission(req, res));
