@@ -19,7 +19,7 @@ module.exports = function (app) {
 	app.use(cookieParser());
 	app.use(fileUpload());
 	app.use(cors({
-		origin: "*",
+		origin: ["http://127.0.0.1:5501", "http://localhost:4200/", "*"],
 		optionsSuccessStatus: 200,
 		credentials: true,
 		allowedHeaders: ["Content-Type"]

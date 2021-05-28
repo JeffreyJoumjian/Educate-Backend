@@ -5,7 +5,7 @@ const { Error } = require('mongoose');
 
 const { Instructor } = require('../models/Instructor');
 const { Student } = require('../models/Student');
-
+const cookieParser = require('cookie-parser');
 
 function generateLoginToken(user) {
 	let userType;
@@ -44,12 +44,22 @@ router.post('/', async (req, res) => {
 	try {
 		const token = generateLoginToken(user);
 
-		return res.cookie('educate_login_token', { httpOnly: true }).json(token);
+		return res.cookie('educate_login_token', token.token, {
+			httpOnly: true,
+			sameSite: 'none',
+			domain: 'localhost',
+			secure: true
+		}).json(token);
 	}
 	catch (e) {
 		return res.status(500).send(e.message);
 	}
 });
+
+router.get('/', async (req, res) => {
+	console.log(req.cookies.educate_login_token);
+	return res.send();
+})
 
 
 module.exports = router;

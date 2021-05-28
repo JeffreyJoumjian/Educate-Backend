@@ -161,6 +161,43 @@
 			console.log(res.status + " " + await res.text());
 		}
 	}
+
+	async function login() {
+		console.log('logging in')
+		let data = {
+			email: "jeffrey.joumjian@test.com",
+			password: "test"
+		}
+		let res = await fetch('http://localhost:3000/api/logins', {
+			method: 'POST',
+			mode: 'cors', // this cannot be 'no-cors'
+			credentials: 'include',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data)
+		});
+		if (res.status === 200) {
+			console.log(await res.json());
+
+			res = await fetch('http://localhost:3000/api/logins', {
+				method: 'GET',
+				mode: 'cors', // this cannot be 'no-cors
+				credentials: 'include',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				}
+			});
+
+			console.log(await res.text());
+		} else {
+			console.log(await res.text());
+		}
+	}
+
+	login();
 </script>
 </body>
 

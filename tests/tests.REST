@@ -205,6 +205,13 @@ Content-Type: application/json
 	"password":"test"
 }
 
+### TEST COOKIE
+GET http://localhost:3000/api/logins/
+Content-Type: application/json
+{
+
+}
+
 ### GET ALL SUBMISSIONS OF A STUDENT BY SECTION
 GET http://localhost:3000/api/submissions/section/60ad3b6f5524c70bafe78ad0/student/submissions/all/60ae88fed3d494432ccd6dee/
 
