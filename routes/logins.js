@@ -25,7 +25,7 @@ function generateLoginToken(user) {
 		process.env.EDUCATE_PRIVATE_KEY,
 		{ expiresIn: '1h' }
 	);
-	return { token, userType };
+	return { token, userType, expiresIn: 1 };
 }
 
 router.post('/', async (req, res) => {
