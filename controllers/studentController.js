@@ -16,14 +16,12 @@ const studentController = {
 		if (!isValidObjectId(student_id))
 			return res.status(400).send("Invalid ID");
 
-		let student = await Student.findById(student_id).populate('studentSections');
+		let student = await Student.findById(student_id).select("-password").populate('studentSections');
 
 		if (!student)
 			return res.status(404).send("The student with the given ID was not found");
 
-		return res.status(200).json(
-			_.pick(student, ['fullName', 'email', 'phone', 'department', 'CGPA', 'studentSections'])
-		);
+		return res.status(200).json(student);
 	},
 
 	createStudent: async (req, res) => {
@@ -99,7 +97,12 @@ const studentController = {
 			if (!isValidObjectId(student_id))
 				return res.status(400).send("Invalid ID");
 
-			let student = await Student.findById(student_id);
+			let student = await Student
+				.findById(student_id)
+				.populate({
+					path: 'studentSections',
+					populate: { path: 'course' }
+				});;
 
 			if (!student)
 				return res.status(404).send("The student with the given ID was");

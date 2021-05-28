@@ -16,13 +16,13 @@ const instructorController = {
 		if (!isValidObjectId(instructor_id))
 			return res.status(400).send("Invalid ID");
 
-		let instructor = await Instructor.findById(instructor_id);
+		let instructor = await Instructor.findById(instructor_id).select("-password").populate('teachingSections');
 
 		if (!instructor)
 			return res.status(404).send('The instructor with the given ID was not found');
 
 
-		return res.status(200).json(_.pick(instructor, ['_id', 'fullName', 'title', 'email', 'phone', 'teachingSections', 'department']));
+		return res.status(200).json(instructor);
 	},
 
 	createInstructor: async (req, res) => {
