@@ -142,7 +142,9 @@ const assignmentController = {
 			if (!assignment)
 				return res.status(404).send("The assignment with the given ID does not exist");
 
-			return res.status(200).json(assignment);
+			req.body.assignment = assignment;
+			req.body.type = "assignment";
+			// return res.status(200).json(assignment);
 		}
 		catch (e) {
 			return res.status(500).send(e.message);

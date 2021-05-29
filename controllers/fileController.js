@@ -177,6 +177,7 @@ const fileController = {
 		// }
 	},
 
+	// FIX deleting an assignment should also delete it in the hierarchy
 	deleteFromHierarchy: async (req, res) => {
 		const { section_id, path } = req.body;
 
@@ -194,12 +195,6 @@ const fileController = {
 		// find path and recursively delete its elements
 		let fileHierarchy = section.fileHierarchy;
 
-		/* array of 
-		{
-			data:''
-			ref:''
-		}
-		*/
 		const filesToDelete = [];
 
 		while (fileHierarchy) {
@@ -215,7 +210,12 @@ const fileController = {
 						await File.findByIdAndDelete(file.data);
 				}
 
-				return res.status(200).json(section.fileHierarchy);
+				await section.fileHierarchy.pull({ path });
+
+				section.markModified('fileHierarchy');
+				section = await section.save();
+
+				return res.status(200).json({ hierarchy: section.fileHierarchy, assignment: req.body.assignment });
 			}
 
 			fileHierarchy = fileHierarchy.children.find(child => path.includes(child.path));

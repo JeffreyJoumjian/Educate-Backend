@@ -185,6 +185,17 @@ Content-Type: application/json
 	"endTime":"11:59 PM"
 }
 
+### DELETE ASSIGNMENT
+DELETE http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"assignment_id":"60b27dce5dc3375acecb69e9"
+}
+
+### DELETE ASSIGNMENT
+
+
 # LOGGIN IN
 ### POST LOGIN
 POST http://localhost:3000/api/logins/

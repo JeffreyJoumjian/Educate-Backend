@@ -171,7 +171,7 @@ const submissionController = {
 			if (!isValidObjectId(submission_id))
 				return res.status(400).send("Invalid ID");
 
-			let submission = await Submission.findById();
+			let submission = await Submission.findById(submission_id);
 
 			if (!submission)
 				return res.status(404).send("The submission with the given ID was not found");
