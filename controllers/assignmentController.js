@@ -87,9 +87,6 @@ const assignmentController = {
 
 			assignment = await assignment.save();
 
-			section.assignments.push(assignment._id)
-			await section.save();
-
 			return res.status(201).json(assignment);
 
 		}
