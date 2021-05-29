@@ -86,10 +86,11 @@ const submissionController = {
 		for (let i = 0; i < assignments.length; i++) {
 			let assignment = assignments[i];
 
-			submissions.push(
-				await Submission.findOne({ assignment: assignment._id, student: student_id })
-					.populate('assignment').populate('student')
-			);
+			let submission = await Submission.findOne({ assignment: assignment._id, student: student_id })
+				.populate('assignment').populate('student');
+
+			if (submission)
+				submissions.push(submission);
 
 		}
 

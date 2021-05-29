@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>File Hierarchy</title>
+
+	<style>
+		.file {
+			color: blue;
+		}
+
+		.file:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<ul id="files" style="list-style: none;">
+		<li class="file">
+			This is a link
+		</li>
+	</ul>
+
+	<script>
+		const filesContainer = document.getElementById('files');
+		let previousPath = "root";
+		let currentPath = "root";
+
+		async function getHierarchyFromServer() {
+			let req = await fetch('http://localhost:3000/api/hierarchies')
+		}
+
+		function cleanUrl(url) {
+			return url.toLowerCase().replace(/[^a-z0-9]+/, '-');
+		}
+		let url = "1 d";
+		url = cleanUrl(url)
+		console.log(url)
+	</script>
+</body>
+
+</html>

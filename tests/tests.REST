@@ -213,7 +213,7 @@ Content-Type: application/json
 }
 
 ### GET ALL SUBMISSIONS OF A STUDENT BY SECTION
-GET http://localhost:3000/api/submissions/section/60ad3b6f5524c70bafe78ad0/student/submissions/all/60ae88fed3d494432ccd6dee/
+GET http://localhost:3000/api/submissions/section/60b2369c99ce664d41bf080b/student/submissions/all/60b234e653dbf04ceb5b3605/
 
 
 ### SUBMIT ASSIGNMENT
