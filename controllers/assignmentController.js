@@ -111,7 +111,9 @@ const assignmentController = {
 				if (prop !== "assignment_id" && prop !== "files")
 					assignment[prop] = req.body[prop];
 
-			fileController.attachFiles(req, res, assignment);
+
+			if (req?.files?.files)
+				fileController.attachFiles(req, res, assignment);
 
 			await assignment.save();
 
