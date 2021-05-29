@@ -189,8 +189,9 @@ const fileController = {
 		if (!section)
 			return res.status(404).send("Section with the given ID was not found");
 
-		if (!path)
+		if (!path) {
 			return res.status(400).send("path cannot be empty");
+		}
 
 		// find path and recursively delete its elements
 		let fileHierarchy = section.fileHierarchy;
@@ -210,7 +211,7 @@ const fileController = {
 						await File.findByIdAndDelete(file.data);
 				}
 
-				await section.fileHierarchy.pull({ path });
+				await section.fileHierarchy.children.pull(fileHierarchy._id);
 
 				section.markModified('fileHierarchy');
 				section = await section.save();

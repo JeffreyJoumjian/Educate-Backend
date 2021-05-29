@@ -166,7 +166,7 @@ const submissionController = {
 
 	gradeSubmission: async (req, res) => {
 		try {
-			let submission_id = req.body.submission_id;
+			let { submission_id, grade, comments } = req.body.submission_id;
 
 			if (!isValidObjectId(submission_id))
 				return res.status(400).send("Invalid ID");
@@ -176,7 +176,8 @@ const submissionController = {
 			if (!submission)
 				return res.status(404).send("The submission with the given ID was not found");
 
-			submission = { ..._.pick(['grade', 'comments']) };
+			submission.grade = grade;
+			submission.comments = comments;
 			submission.isGraded = true;
 
 			return res.status(201).json(await submission.save());

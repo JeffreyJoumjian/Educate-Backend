@@ -217,6 +217,7 @@
 				inpAssignment.value = "";
 				if (req.status === 201) {
 					let res = (await req.json()).hierarchy;
+					console.log(res.children[0].data);
 					displayHierarchy(res);
 				} else {
 					console.log(await req.text())

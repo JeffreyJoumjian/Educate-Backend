@@ -190,7 +190,9 @@ DELETE http://localhost:3000/api/assignments/
 Content-Type: application/json
 
 {
-	"assignment_id":"60b27dce5dc3375acecb69e9"
+	"path":"root/ter",
+	"assignment_id":"60b293d0ceb00d5fd46f0f7c",
+	"section_id": "60b2369c99ce664d41bf080b"
 }
 
 ### DELETE ASSIGNMENT

@@ -144,6 +144,8 @@ const assignmentController = {
 
 			req.body.assignment = assignment;
 			req.body.type = "assignment";
+
+			fileController.deleteFromHierarchy(req, res);
 			// return res.status(200).json(assignment);
 		}
 		catch (e) {
