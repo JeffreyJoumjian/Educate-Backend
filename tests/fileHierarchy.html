@@ -16,33 +16,213 @@
 			text-decoration: underline;
 			cursor: pointer;
 		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+		}
+
+		.input * {
+			margin-right: 20px;
+
+		}
 	</style>
 </head>
 
 <body>
+	<div class="input">
+		<button id="btn-back">back</button>
+		<label for="name">Folder Name: </label>
+		<input type="text" name="name" id="inp-name">
+		<button id="btn-new">new folder</button>
 
+		<label for="assignment-name">Assignment Name: </label>
+		<input type="text" name="assignment-name" id="inp-assignment">
+		<button id="btn-assignment"> create assignment</button>
 
-	<ul id="files" style="list-style: none;">
-		<li class="file">
-			This is a link
-		</li>
-	</ul>
+	</div>
+	<ul id="files" style="list-style: none;"></ul>
+	<div class="assignment-details">
+		<h3 class="assignment-name"></h3>
+		<p class="assignment-desc"></p>
+	</div>
 
 	<script>
 		const filesContainer = document.getElementById('files');
-		let previousPath = "root";
+		const btnBack = document.getElementById('btn-back');
+		const btnNewFolder = document.getElementById('btn-new');
+		const btnNewAssigment = document.getElementById('btn-assignment');
+		const inpName = document.getElementById('inp-name');
+		const inpAssignment = document.getElementById('inp-assignment');
+
+		const assignmentName = document.querySelector('.assignment-name');
+		const assignmentDesc = document.querySelector('.assignment-desc');
+
+		let previousPath = [];
 		let currentPath = "root";
+		getHierarchyFromServer();
 
 		async function getHierarchyFromServer() {
-			let req = await fetch('http://localhost:3000/api/hierarchies')
+			let reqPath = currentPath;
+			let req = await fetch(`http://localhost:3000/api/hierarchies/60b2369c99ce664d41bf080b/?path=${reqPath}`, {
+				method: 'GET',
+				mode: 'cors'
+			});
+
+			if (req.status === 200) {
+				let res = await req.json();
+				displayHierarchy(res);
+			} else {
+				console.log(await req.text());
+			}
+		}
+
+		function displayHierarchy(hierarchy) {
+			btnBack.style.display = currentPath === "root" ? "none" : "block";
+			filesContainer.innerHTML = "";
+
+
+			hierarchy.children.forEach(child => createHierarchyElement(child));
+		}
+
+		function createHierarchyElement(child) {
+			const template = `
+				<li class="file" data-path="" data-type="">
+					[${child.type}] ${child.name}
+				</li>
+			`.trim();
+			let tempElement = document.createElement('template');
+
+			tempElement.innerHTML = template;
+			tempElement = tempElement.content.firstChild;
+			tempElement.setAttribute('data-path', child.path);
+			tempElement.setAttribute('data-type', child.type);
+
+			let type = child.type;
+
+			if (type === "assignment") {
+				tempElement.setAttribute("data-assignment-id", child.data);
+			}
+
+
+			tempElement.addEventListener('click', function () {
+				if (type === "folder") {
+					assignmentName.innerText = "";
+					assignmentDesc.innerText = "";
+					previousPath.push(currentPath);
+					currentPath = this.getAttribute('data-path');
+					getHierarchyFromServer();
+					updateAssignmentDetails();
+				}
+
+				if (type === "assignment") {
+					updateAssignmentDetails(child.data);
+				}
+			});
+
+			filesContainer.appendChild(tempElement);
 		}
 
 		function cleanUrl(url) {
-			return url.toLowerCase().replace(/[^a-z0-9]+/, '-');
+			return url.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 		}
-		let url = "1 d";
-		url = cleanUrl(url)
-		console.log(url)
+
+		async function updateAssignmentDetails(assignment_id) {
+
+			assignmentName.innerText = "";
+			assignmentDesc.innerText = "";
+
+			if (assignment_id) {
+
+				let req = await fetch(`http://localhost:3000/api/assignments/${assignment_id}`);
+
+				if (req.status === 200) {
+					let assignment = await req.json();
+					assignmentName.innerText = assignment.name;
+					assignmentDesc.innerText = assignment.description;
+				}
+			}
+		}
+
+		btnBack.addEventListener('click', () => {
+			currentPath = previousPath.pop();
+			getHierarchyFromServer();
+			updateAssignmentDetails();
+		});
+
+		btnNewFolder.addEventListener('click', async () => {
+
+			if (inpName.value.trim()) {
+
+				const newHierarchyObj = {
+					section_id: "60b2369c99ce664d41bf080b",
+					parentPath: currentPath,
+					type: "folder",
+					name: inpName.value.trim()
+				}
+
+				let req = await fetch('http://localhost:3000/api/hierarchies', {
+					method: 'POST',
+					mode: 'cors',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(newHierarchyObj)
+				});
+
+				inpName.value = "";
+
+				if (req.status === 201) {
+					let res = (await req.json()).hierarchy;
+					displayHierarchy(res);
+				} else {
+					console.log(await req.text())
+				}
+			}
+		});
+
+		btnNewAssigment.addEventListener('click', async () => {
+			if (inpAssignment.value.trim()) {
+
+				let assignment = {
+					"parentPath": currentPath,
+					"section": "60b2369c99ce664d41bf080b",
+					"name": inpAssignment.value.trim(),
+					"description": "This is a test assignment",
+					"type": "assignment",
+					"maxGrade": 100,
+					"gradePercentage": 10,
+					"startDate": "13/05/2021",
+					"startTime": "12:01 AM",
+					"endDate": "16/06/2021",
+					"endTime": "11:59 PM",
+					"isActive": true,
+					"visibility": "automatic",
+					"allowLateSubmissions": true,
+					"allowMultipleSubmissions": true
+				}
+
+				let req = await fetch('http://localhost:3000/api/assignments', {
+					method: 'POST',
+					mode: 'cors',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(assignment)
+				});
+
+				inpAssignment.value = "";
+				if (req.status === 201) {
+					let res = (await req.json()).hierarchy;
+					displayHierarchy(res);
+				} else {
+					console.log(await req.text())
+				}
+			}
+		});
 	</script>
 </body>
 

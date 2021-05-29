@@ -228,7 +228,7 @@ Content-Type: application/json
 
 # FILE HIERARCHY
 ### GET FOLDER HIERARCHY
-GET http://localhost:3000/api/hierarchies/60add6912000ca23f2b543b4/?path=root/Assignments
+GET http://localhost:3000/api/hierarchies/60b2369c99ce664d41bf080b/?path=root
 
 
 ### ADD FOLDER TO HIERARCHY
@@ -236,10 +236,10 @@ POST http://localhost:3000/api/hierarchies/
 Content-Type: application/json
 
 {
-	"section_id": "60add6912000ca23f2b543b4",
-	"parentPath":"root/Assignments",
+	"section_id": "60b2369c99ce664d41bf080b",
+	"parentPath":"root",
 	"type": "folder",
-	"name":"exam 1"
+	"name":"Exams"
 }
 ### ADD Assignment TO HIERARCHY
 POST http://localhost:3000/api/hierarchies/

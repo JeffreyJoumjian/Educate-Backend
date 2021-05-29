@@ -72,10 +72,9 @@ const fileController = {
 
 	addToHierarchy: async (req, res) => {
 		const {
-			section_id,
-			assignment_id,
+			section: section_id,
 			type,
-			name
+			name,
 		} = req.body;
 
 		let parentPath = req.body.parentPath;
@@ -98,7 +97,7 @@ const fileController = {
 
 		let assignment;
 		if (type == "assignment") {
-			assignment = await Assignment.findById(assignment_id);
+			assignment = req.body.assignment;
 
 			if (!assignment)
 				return res.status(404).send("The Assignment with the given ID was not found.");
@@ -128,7 +127,7 @@ const fileController = {
 						return res.status(400).send("A folder with the same name already exists.");
 				}
 				else if (type === "assignment") {
-					data = assignment_id;
+					data = assignment._id;
 				}
 				else if (type === "file") {
 					const { name: fileName, mimetype, size, data: fileData } = sentFile;
@@ -164,7 +163,7 @@ const fileController = {
 				section.markModified('fileHierarchy');
 				section = await section.save();
 
-				return res.status(200).json(section.fileHierarchy);
+				return res.status(201).json({ hierarchy: currHierarchy, assignment });
 			}
 
 			currHierarchy = currHierarchy.children.find(child => parentPath.includes(child.path));
@@ -246,6 +245,9 @@ function recurseStructure(fileHierarchy, filesToDelete) {
 }
 
 function cleanPath(path) {
+
+	if (!path)
+		path = "root";
 
 	if (path[path.length - 1] === "/")
 		path = path.substring(0, path.length - 1);

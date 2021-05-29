@@ -73,7 +73,8 @@ function validateAssignmentSchema(isNew = true) {
 		isVisible: Joi.boolean(),
 		allowLateSubmissions: Joi.boolean(),
 		allowMultipleSubmissions: Joi.boolean(),
-		files: Joi.any()
+		files: Joi.any(),
+		parentPath: Joi.string().optional()
 	});
 }
 
