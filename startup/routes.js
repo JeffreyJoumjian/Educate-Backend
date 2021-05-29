@@ -12,7 +12,8 @@ const assignmentsRouter = require('../routes/assignments');
 const submissionsRouter = require('../routes/submissions');
 const instructorsRouter = require('../routes/instructors');
 const studentsRouter = require('../routes/students');
-const deleteRouter = require('../routes/delete');
+// const deleteRouter = require('../routes/delete');
+const announcementRouter = require('../routes/announcements');
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -30,7 +31,7 @@ module.exports = function (app) {
 		res.status(200).send("home");
 	});
 
-	app.use('/api/delete', deleteRouter);
+	// app.use('/api/delete', deleteRouter);
 	app.use('/api/logins', loginsRouter);
 	app.use('/api/courses', coursesRouter);
 	app.use('/api/sections', sectionsRouter);
@@ -39,6 +40,7 @@ module.exports = function (app) {
 	app.use('/api/submissions', submissionsRouter);
 	app.use('/api/instructors', instructorsRouter);
 	app.use('/api/students', studentsRouter);
+	app.use('/api/announcements', announcementRouter);
 	app.use('*', (req, res) => res.redirect('/'));
 
 }

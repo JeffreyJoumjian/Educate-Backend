@@ -1,5 +1,4 @@
 const _ = require('lodash');
-
 const { File } = require('../models/File');
 const { Section } = require('../models/Section');
 const { Assignment } = require('../models/Assignment');
@@ -205,13 +204,16 @@ const fileController = {
 				for (let i = 0; i < filesToDelete.length; i++) {
 					let file = filesToDelete[i];
 
-					if (file.type === "assignment")
+					if (file.type === "assignment") {
 						await Assignment.findByIdAndDelete(file.data);
+
+					}
 					if (file.type === "file")
 						await File.findByIdAndDelete(file.data);
+					if (file.type === "folder") {
+						await section.fileHierarchy.children.pull(fileHierarchy._id);
+					}
 				}
-
-				await section.fileHierarchy.children.pull(fileHierarchy._id);
 
 				section.markModified('fileHierarchy');
 				section = await section.save();

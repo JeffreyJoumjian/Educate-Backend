@@ -90,9 +90,9 @@ const assignmentController = {
 			req.body.assignment = assignment;
 			req.body.type = "assignment";
 
-			fileController.addToHierarchy(req, res);
+			// fileController.addToHierarchy(req, res);
 
-			// return res.status(201).json(assignment);
+			return res.status(201).json(assignment);
 
 		}
 		catch (e) {
@@ -142,11 +142,11 @@ const assignmentController = {
 			if (!assignment)
 				return res.status(404).send("The assignment with the given ID does not exist");
 
-			req.body.assignment = assignment;
-			req.body.type = "assignment";
+			// req.body.assignment = assignment;
+			// req.body.type = "assignment";
 
-			fileController.deleteFromHierarchy(req, res);
-			// return res.status(200).json(assignment);
+			// fileController.deleteFromHierarchy(req, res);
+			return res.status(200).json(assignment);
 		}
 		catch (e) {
 			return res.status(500).send(e.message);

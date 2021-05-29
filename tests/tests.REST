@@ -190,8 +190,8 @@ DELETE http://localhost:3000/api/assignments/
 Content-Type: application/json
 
 {
-	"path":"root/ter",
-	"assignment_id":"60b293d0ceb00d5fd46f0f7c",
+	"path":"root/third",
+	"assignment_id":"60b298c6b257dd6168e6f099",
 	"section_id": "60b2369c99ce664d41bf080b"
 }
 
@@ -239,6 +239,18 @@ Content-Type: application/json
 	"textSubmission":"This is a submission for assignment 2"
 }
 
+### GRADE ASSIGNMENT
+PUT http://localhost:3000/api/submissions/grade
+Content-Type: application/json
+
+{
+	"submission_id": "60b257230482f7059091fb4a",
+	"grade":100,
+	"comments":"Good job!"
+}
+
+
+
 # FILE HIERARCHY
 ### GET FOLDER HIERARCHY
 GET http://localhost:3000/api/hierarchies/60b2369c99ce664d41bf080b/?path=root
@@ -278,3 +290,25 @@ Content-Type: application/json
 #  delete everything
 ### delete
 DELETE http://localhost:3000/api/delete/all
+
+
+# ANNOUNCEMENTS
+### GET ANNOUNCEMENT
+GET http://localhost:3000/api/announcements/section/60b2369c99ce664d41bf080b
+
+### GET ANNOUNCEMENTS BY STUDENT ID
+GET http://localhost:3000/api/announcements/student/60b234e353dbf04ceb5b35fc
+
+### GET ANNOUNCEMENTS BY INSTRUCTOR ID
+GET http://localhost:3000/api/announcements/instructor/60b23956187b704dd8c36210
+
+
+### CREATE ANNOUNCEMENT
+POST http://localhost:3000/api/announcements/
+Content-Type: application/json
+
+{
+	"section_id":"60b2369c99ce664d41bf080b",
+	"title": "We are now live",
+	"description": "Make sure to have zoom installed on your computer for our meetings"
+}
