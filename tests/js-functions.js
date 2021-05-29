@@ -5,15 +5,16 @@ function testDate() {
 	const { parse, parseISO, format, isAfter, isBefore } = require('date-fns');
 
 	let startDate = parse(`13/05/2021 12:01 AM`, 'dd/MM/yyyy p', Date.now());
-	let endDate = parse(`16/05/2021 11:59 PM`, 'dd/MM/yyyy p', Date.now());
+	let endDate = parse(`30/05/2021 11:59 PM`, 'dd/MM/yyyy p', Date.now());
 	let currentDate = parseISO(new Date().toISOString(), "dd/MM/yyyy p");
 
-	console.log(currentDate);
-	if (isAfter(startDate, currentDate) && isBefore(currentDate, endDate))
+	if (isAfter(currentDate, startDate) && isBefore(currentDate, endDate))
 		return true;
 
 	return false;
 }
+
+console.log(testDate());
 
 function testFileHierachy(path) {
 	let section = {
@@ -188,13 +189,3 @@ function recurseStructure(path, arr) {
 		path.children.forEach(child => recurseStructure(child, filesToDelete));
 
 }
-
-
-let x = "/path/";
-
-if (x[0] === "/")
-	x = x.substring(1, x.length);
-if (x[x.length - 1] === "/")
-	x = x.substring(0, x.length - 1);
-
-console.log(x);

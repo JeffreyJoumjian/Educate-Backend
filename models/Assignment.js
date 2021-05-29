@@ -46,7 +46,7 @@ assignmentSchema.methods.setIsActive = function () {
 	let endDate = parse(`${this.endDate} ${this.endTime}`, 'dd/MM/yyyy p', Date.now());
 	let currentDate = parseISO(new Date().toISOString(), "dd/MM/yyyy p");
 
-	if (isAfter(startDate, currentDate) && isBefore(currentDate, endDate))
+	if (isAfter(currentDate, startDate) && isBefore(currentDate, endDate))
 		return this.isActive = true;
 
 	return this.isActive = false;
