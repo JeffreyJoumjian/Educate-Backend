@@ -24,7 +24,7 @@ router.put('/', validator.body(validateInstructorSchema(false)), (req, res) => {
 	instructorController.updateInstructorInfo(req, res);
 });
 
-router.put('/:instructor_id/sections/:section_id', (req, res) => instructorController.getTeachingSections(req, res));
+router.put('/:instructor_id/courses/add/:section_id', (req, res) => instructorController.addTeachingSection(req, res));
 
 router.delete('/', (req, res) => {
 	instructorController.deleteInstructorById(req, res);

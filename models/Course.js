@@ -7,15 +7,9 @@ const { departments } = require('../utils/universityData');
 
 const courseSchema = new mongoose.Schema({
 	name: { type: String, required: true, unique: true },
-	nameNumber: { type: String, required: true, unique: true },
+	code: { type: String, required: true, unique: true },
 	description: { type: String },
-	credits: {
-		type: Number,
-		required: true,
-		min: 1,
-		max: 5,
-		default: 3
-	},
+	credits: { type: Number, required: true, min: 1, max: 5, default: 3 },
 	department: { type: String, enum: departments }
 });
 
@@ -25,9 +19,9 @@ function validateCourseSchema(isNew = true) {
 	return Joi.object({
 		course_id: !isNew ? Joi.objectId().required() : Joi.objectId(),
 		name: isNew ? Joi.string().required() : Joi.string(),
-		nameNumber: isNew ? Joi.string().required() : Joi.string(),
+		code: isNew ? Joi.string().required() : Joi.string(),
 		description: Joi.string(),
-		credits: isNew ? Joi.number().required().min(1).max(5) : Joi.number().required().min(1).max(5),
+		credits: Joi.number().min(1).max(5),
 		department: Joi.string().valid(...departments)
 	});
 

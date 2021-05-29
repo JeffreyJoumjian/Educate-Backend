@@ -37,9 +37,10 @@ const instructorController = {
 
 
 			instructor.password = await bcrypt.hash(instructor.password, 10);
-			instructor = await instructor.save();
+			instructor = (await instructor.save()).select("-password");
 
-			return res.status(200).json(_.pick(instructor, ['_id', "fullName", "email", "phone", "title", "teachingSections", "department"]));
+			// return res.status(200).json(_.pick(instructor, ['_id', "fullName", "email", "phone", "title", "teachingSections", "department"]));
+			return res.status(200).json(instructor);
 		}
 		catch (e) {
 			return res.status(500).send(e.message);

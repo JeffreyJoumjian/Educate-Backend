@@ -13,6 +13,11 @@ module.exports = function (app) {
 				level: 'info',
 				format: combine(timestamp(), colorize())
 			}),
+			new transports.File({
+				filename: path.join('logs/deletion.log'),
+				level: 'error',
+				format: combine(timestamp(), colorize())
+			}),
 		],
 		exceptionHandlers: [
 			new transports.File({

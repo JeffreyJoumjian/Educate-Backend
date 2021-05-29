@@ -36,7 +36,7 @@ const studentController = {
 			student.password = await bcrypt.hash(student.password, 10);
 			student = await student.save();
 
-			return res.status(200).json(_.pick(student, ['fullName', 'email', 'phone', 'department', 'CGPA', 'studentSections']));
+			return res.status(201).json(_.pick(student, ['_id', 'fullName', 'email', 'phone', 'department', 'CGPA', 'studentSections']));
 		}
 		catch (e) {
 			return res.status(500).send(e.message);

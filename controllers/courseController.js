@@ -26,7 +26,7 @@ const courseController = {
 			let course = await Course.findOne({
 				$or: [
 					{ name: req.body.name },
-					{ nameNumber: req.body.nameNumber }
+					{ code: req.body.code }
 				]
 			});
 
@@ -34,7 +34,7 @@ const courseController = {
 				return res.status(409).send("Course with the given name or nameNumber already exists.");
 
 			course = new Course(
-				_.pick(req.body, ['name', 'nameNumber', 'description', 'credits', 'department'])
+				_.pick(req.body, ['name', 'code', 'description', 'credits', 'department'])
 			);
 
 			course = await course.save();

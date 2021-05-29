@@ -8,16 +8,8 @@ const { FileHierarchySchema } = require('./FileHierarchy');
 
 // SUGGESTION maybe create a semester object
 const sectionSchema = new Schema({
-	course: {
-		type: Schema.Types.ObjectId,
-		ref: 'Course',
-		required: true
-	},
-	CRN: {
-		type: Number,
-		required: true,
-		unique: true,
-	},
+	course: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+	CRN: { type: Number, required: true, unique: true, },
 	capacity: { type: Number, min: 1, max: 40, default: 20 },
 	semester: { type: String, enum: semesters },
 	startDate: { type: String, },

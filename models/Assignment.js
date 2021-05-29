@@ -30,7 +30,7 @@ const assignmentSchema = new Schema({
 	endDate: { type: String, required: true },
 	endTime: { type: String, required: true },
 	isActive: { type: Boolean, default: true },
-	visibility: { type: String, enum: assignmentVisibilityTypes },
+	visibility: { type: String, enum: assignmentVisibilityTypes, default: "automatic" },
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmissions: { type: Boolean, default: true },

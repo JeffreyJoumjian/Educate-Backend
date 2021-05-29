@@ -4,35 +4,18 @@ Joi.objectId = require('joi-objectid')(Joi);
 const { departments, titles } = require('../utils/universityData');
 
 const instructorSchema = new Schema({
-	fullName: {
-		type: String,
-		required: true
-	},
-	title: {
-		type: [String],
-		enum: titles
-	},
-	email: {
-		type: String,
-		required: true,
-	},
-	phone: {
-		type: String,
-		minlength: 8,
-		maxlength: 15
-	},
-	password: {
-		type: String,
-		required: true
-	},
+	fullName: { type: String, required: true },
+	title: { type: [String], enum: titles },
+	email: { type: String, required: true, },
+	phone: { type: String, minlength: 8, maxlength: 15 },
+	password: { type: String, required: true },
 	teachingSections: [{ type: Schema.Types.ObjectId, ref: 'Section' }],
-	department: {
-		type: String,
-		enum: departments
-	}
-}, {
-	collection: 'instructors'
+	department: { type: String, enum: departments }
 });
+
+// instructorSchema.methods.generateEmail = function () {
+// 	this.email = this.fullName.split(" ").join(".") + "@instructor.edu";
+// }
 
 const Instructor = model('Instructor', instructorSchema);
 
@@ -44,7 +27,7 @@ function validateInstructorSchema(isNew = true) {
 		email: isNew ? Joi.string().required() : Joi.string(),
 		password: isNew ? Joi.string().required() : Joi.string(),
 		phone: Joi.string(),
-		title: Joi.string() || Joi.array().items(Joi.string().valid(...titles)),
+		title: Joi.array().items(Joi.string().valid(...titles)) || Joi.string(),
 		teachingSections: Joi.array().items(Joi.objectId()),
 		department: Joi.string().valid(...departments)
 	});

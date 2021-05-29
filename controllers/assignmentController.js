@@ -85,7 +85,10 @@ const assignmentController = {
 			if (req?.files?.files)
 				fileController.attachFiles(req, res, assignment);
 
-			await assignment.save();
+			assignment = await assignment.save();
+
+			section.assignments.push(assignment._id)
+			await section.save();
 
 			return res.status(201).json(assignment);
 

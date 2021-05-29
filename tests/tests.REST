@@ -261,3 +261,7 @@ Content-Type: application/json
 	"section_id": "60add6912000ca23f2b543b4",
 	"path": "root/Assignments"
 }
+
+#  delete everything
+### delete
+DELETE http://localhost:3000/api/delete/all

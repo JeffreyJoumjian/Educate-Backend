@@ -12,6 +12,7 @@ const assignmentsRouter = require('../routes/assignments');
 const submissionsRouter = require('../routes/submissions');
 const instructorsRouter = require('../routes/instructors');
 const studentsRouter = require('../routes/students');
+const deleteRouter = require('../routes/delete');
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -29,6 +30,7 @@ module.exports = function (app) {
 		res.status(200).send("home");
 	});
 
+	app.use('/api/delete', deleteRouter);
 	app.use('/api/logins', loginsRouter);
 	app.use('/api/courses', coursesRouter);
 	app.use('/api/sections', sectionsRouter);
