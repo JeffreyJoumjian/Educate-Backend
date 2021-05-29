@@ -166,7 +166,7 @@ const submissionController = {
 
 	gradeSubmission: async (req, res) => {
 		try {
-			let { submission_id, grade, comments } = req.body.submission_id;
+			let { submission_id, grade, comments } = req.body;
 
 			if (!isValidObjectId(submission_id))
 				return res.status(400).send("Invalid ID");
