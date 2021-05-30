@@ -12,13 +12,10 @@ const fileHierarchySchema = new Schema({
 	path: { type: String, required: true, default: "root" },
 	name: { type: String },
 	type: { type: String, enum: hierarchyTypes },
+	mimetype: { type: String },
 	data: {
 		type: Schema.Types.ObjectId,
 		refPath: 'typeOfData'
-	},
-	typeOfData: {
-		type: String,
-		enum: dataTypes
 	},
 	children: [this]
 });

@@ -142,6 +142,7 @@ const fileController = {
 			if (parentPath === currHierarchy.path) {
 
 				let data;
+				let file;
 				let path = `${parentPath}/${name}`;
 
 				if (type === "folder") {
@@ -164,7 +165,7 @@ const fileController = {
 
 
 					// if file already exists in directory
-					let file = currHierarchy.children.find(child => child.path === path);
+					file = currHierarchy.children.find(child => child.path === path);
 
 					if (file)
 						return res.status(400).send("A file with the same name already exists.");
@@ -184,6 +185,7 @@ const fileController = {
 					path,
 					name,
 					type,
+					mimetype: type === "file" ? file.type : undefined,
 					data,
 					children: type === "folder" ? [] : undefined
 				});
