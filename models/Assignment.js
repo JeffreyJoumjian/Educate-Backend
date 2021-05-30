@@ -3,6 +3,8 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
+const { FileSchema } = require('../models/File');
+
 // const { supportedFileTypes } = require('../utils/universityData');
 const assignmentTypes = ['exam', 'quiz', 'paper', 'project', 'assignment'];
 const assignmentVisibilityTypes = ["manual", "automatic"];
@@ -35,7 +37,7 @@ const assignmentSchema = new Schema({
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmissions: { type: Boolean, default: true },
 	// path: { type: String, required: true, default: '/' },
-	files: { type: [Schema.Types.ObjectId], ref: 'File' }
+	files: [{ type: FileSchema }]
 });
 
 assignmentSchema.methods.setIsActive = function () {

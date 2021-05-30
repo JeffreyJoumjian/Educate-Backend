@@ -35,12 +35,12 @@ const fileController = {
 		sentFiles.forEach(sentFile => {
 			const { name, mimetype: type, size, data } = sentFile;
 
+			let file = new File({ name, type, size, data });
+
 			// overwrite duplicates by removing them
 			parent.files = parent.files.filter(file => file.name !== sentFile.name);
 
-			parent.files.push({
-				name, type, size, data
-			});
+			parent.files.push(file);
 		});
 	},
 	removeFiles: (req, res, parent, filesNames) => {

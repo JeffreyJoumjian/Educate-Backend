@@ -3,6 +3,7 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const { format } = require('date-fns');
+const { FileSchema } = require('./File');
 
 // const { supportedFileTypes } = require('../utils/universityData');
 
@@ -14,16 +15,7 @@ const submissionSchema = new Schema({
 	textSubmission: { type: String },
 	comments: { type: String },
 	date: { type: String },
-	files: [{
-		name: { type: String, required: true },
-		size: { type: Number, required: true },
-		type: {
-			type: String,
-			// enum: supportedFileTypes,
-			required: true
-		},
-		data: { type: Buffer, required: true }
-	}]
+	files: [FileSchema]
 
 });
 

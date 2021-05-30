@@ -87,10 +87,7 @@ const assignmentController = {
 
 			assignment = await assignment.save();
 
-			req.body.assignment = assignment;
-			req.body.type = "assignment";
-
-			// fileController.addToHierarchy(req, res);
+			assignment.populate('files');
 
 			return res.status(201).json(assignment);
 

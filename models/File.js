@@ -25,4 +25,4 @@ function validateFileSchema(isNew) {
 	});
 }
 
-module.exports = { File, validateFileSchema };
+module.exports = { FileSchema: fileSchema, File, validateFileSchema };
