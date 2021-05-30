@@ -10,9 +10,21 @@
 	<style>
 		.file {
 			color: blue;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-items: center;
 		}
 
-		.file:hover {
+		.file p {
+			margin: 0;
+		}
+
+		.file button {
+			margin-left: 10px;
+		}
+
+		.file:hover p {
 			text-decoration: underline;
 			cursor: pointer;
 		}
@@ -37,12 +49,14 @@
 		<input type="text" name="name" id="inp-name">
 		<button id="btn-new">new folder</button>
 
-		<label for="assignment-name">Assignment Name: </label>
-		<input type="text" name="assignment-name" id="inp-assignment">
-		<button id="btn-assignment"> create assignment</button>
+		<label for="file">Select Files</label>
+		<input type="file" name="file" id="inp-file">
+		<button id="btn-upload">upload files</button>
 
 	</div>
-	<ul id="files" style="list-style: none;"></ul>
+	<div>
+		<ul id="files" style="list-style: none;"></ul>
+	</div>
 	<div class="assignment-details">
 		<h3 class="assignment-name"></h3>
 		<p class="assignment-desc"></p>
@@ -52,12 +66,10 @@
 		const filesContainer = document.getElementById('files');
 		const btnBack = document.getElementById('btn-back');
 		const btnNewFolder = document.getElementById('btn-new');
-		const btnNewAssigment = document.getElementById('btn-assignment');
+		const btnUpload = document.getElementById('btn-upload');
 		const inpName = document.getElementById('inp-name');
 		const inpAssignment = document.getElementById('inp-assignment');
-
-		const assignmentName = document.querySelector('.assignment-name');
-		const assignmentDesc = document.querySelector('.assignment-desc');
+		const inpFiles = document.getElementById('inp-file');
 
 		let previousPath = [];
 		let currentPath = "root";
@@ -89,7 +101,8 @@
 		function createHierarchyElement(child) {
 			const template = `
 				<li class="file" data-path="" data-type="">
-					[${child.type}] ${child.name}
+					<p>[${child.type}] ${child.name}</p>
+					<button class="btn-delete">x</button>
 				</li>
 			`.trim();
 			let tempElement = document.createElement('template');
@@ -105,19 +118,43 @@
 				tempElement.setAttribute("data-assignment-id", child.data);
 			}
 
+			if (type === "file")
+				tempElement.setAttribute("data-file-id", child.data);
 
-			tempElement.addEventListener('click', function () {
+
+			tempElement.querySelector('p').addEventListener('click', function (e) {
 				if (type === "folder") {
-					assignmentName.innerText = "";
-					assignmentDesc.innerText = "";
 					previousPath.push(currentPath);
-					currentPath = this.getAttribute('data-path');
+					currentPath = e.target.parentNode.getAttribute('data-path');
 					getHierarchyFromServer();
-					updateAssignmentDetails();
 				}
 
-				if (type === "assignment") {
-					updateAssignmentDetails(child.data);
+				if (type === "file") {
+					downloadFile(e.target.parentNode.getAttribute('data-file-id'));
+				}
+			});
+
+			tempElement.querySelector('.file .btn-delete').addEventListener('click', async (e) => {
+				let data = {
+					section_id: "60b2369c99ce664d41bf080b",
+					path: e.target.parentNode.getAttribute('data-path')
+				}
+
+				let req = await fetch('http://localhost:3000/api/hierarchies', {
+					method: 'DELETE',
+					mode: 'cors',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
+				});
+
+				if (req.status === 201) {
+					let res = (await req.json()).hierarchy;
+					getHierarchyFromServer();
+				} else {
+					console.log(req.status + " " + await req.text());
 				}
 			});
 
@@ -128,27 +165,9 @@
 			return url.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 		}
 
-		async function updateAssignmentDetails(assignment_id) {
-
-			assignmentName.innerText = "";
-			assignmentDesc.innerText = "";
-
-			if (assignment_id) {
-
-				let req = await fetch(`http://localhost:3000/api/assignments/${assignment_id}`);
-
-				if (req.status === 200) {
-					let assignment = await req.json();
-					assignmentName.innerText = assignment.name;
-					assignmentDesc.innerText = assignment.description;
-				}
-			}
-		}
-
 		btnBack.addEventListener('click', () => {
 			currentPath = previousPath.pop();
 			getHierarchyFromServer();
-			updateAssignmentDetails();
 		});
 
 		btnNewFolder.addEventListener('click', async () => {
@@ -183,47 +202,73 @@
 			}
 		});
 
-		btnNewAssigment.addEventListener('click', async () => {
-			if (inpAssignment.value.trim()) {
-
-				let assignment = {
-					"parentPath": currentPath,
-					"section": "60b2369c99ce664d41bf080b",
-					"name": inpAssignment.value.trim(),
-					"description": "This is a test assignment",
-					"type": "assignment",
-					"maxGrade": 100,
-					"gradePercentage": 10,
-					"startDate": "13/05/2021",
-					"startTime": "12:01 AM",
-					"endDate": "16/06/2021",
-					"endTime": "11:59 PM",
-					"isActive": true,
-					"visibility": "automatic",
-					"allowLateSubmissions": true,
-					"allowMultipleSubmissions": true
-				}
-
-				let req = await fetch('http://localhost:3000/api/assignments', {
-					method: 'POST',
-					mode: 'cors',
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(assignment)
-				});
-
-				inpAssignment.value = "";
-				if (req.status === 201) {
-					let res = (await req.json()).hierarchy;
-					console.log(res.children[0].data);
-					displayHierarchy(res);
-				} else {
-					console.log(await req.text())
-				}
-			}
+		btnUpload.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (inpFiles.files.length > 0)
+				uploadFiles();
 		});
+
+		async function uploadFiles() {
+
+			let data = {
+				section_id: "60b2369c99ce664d41bf080b",
+				parentPath: currentPath,
+				type: "file"
+			}
+
+			let formData = new FormData();
+
+			for (let prop in data)
+				formData.append(prop, data[prop]);
+
+			// append files
+			for (let i = 0; i < inpFiles.files.length; i++) {
+				formData.append('files', inpFiles.files[i]);
+			}
+			let req = await
+			fetch('http://localhost:3000/api/hierarchies/upload', {
+				method: 'POST',
+				mode: 'cors',
+				body: formData
+			});
+			if (req.status === 201) {
+				let res = (await req.json()).hierarchy;
+				console.log(res.children[0].data);
+				displayHierarchy(res);
+			} else {
+				console.log(req.status + " " + await req.text());
+			}
+		}
+
+		async function downloadFile(file_id) {
+			let req = await fetch(`http://localhost:3000/api/hierarchies/file/${file_id}`);
+
+			if (req.status === 200) {
+				let res = await req.json();
+
+				console.log(res);
+
+				let blob = new Blob([new Uint8Array(res.data.data)], {
+					type: res.type
+				});
+				let link = document.createElement('a');
+				link.href = window.URL.createObjectURL(blob);
+				link.download = res.name;
+				link.click();
+				link.remove();
+			}
+		}
+
+		function base64ToArrayBuffer(base64) {
+			let binaryString = window.atob(base64);
+			let binaryLen = binaryString.length;
+			let bytes = new Uint8Array(binaryLen);
+			for (let i = 0; i < binaryLen; i++) {
+				let ascii = binaryString.charCodeAt(i);
+				bytes[i] = ascii;
+			}
+			return bytes;
+		}
 	</script>
 </body>
 

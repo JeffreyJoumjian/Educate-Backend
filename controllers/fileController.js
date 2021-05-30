@@ -6,6 +6,21 @@ const { FileHierarchy } = require('../models/FileHierarchy');
 const isValidObjectId = require('../utils/validateObjectId');
 
 const fileController = {
+
+	getFile: async (req, res) => {
+		let file_id = req.params.file_id;
+
+		if (!isValidObjectId(file_id))
+			return res.status(400).send("Invalid ID");
+
+		let file = await File.findById(file_id);
+
+		if (!file)
+			return res.status(404).send("The file with the given ID was not found");
+
+		return res.status(200).json(file);
+	},
+
 	// partent is either an assignment or a submission to an assignment
 	attachFiles: (req, res, parent, clearFiles = false) => {
 		if (clearFiles)
@@ -30,6 +45,20 @@ const fileController = {
 	},
 	removeFiles: (req, res, parent, filesNames) => {
 		parent.files = parent.files.filter(file => !filesNames.includes(file.name));
+	},
+
+	uploadFiles: async function (req, res) {
+
+		// get uploaded files
+		let sentFiles = [];
+		sentFiles.push(req.files.files);
+		sentFiles = sentFiles.flat(1); // flatten files to 1 array
+
+		req.body.type = "file";
+		sentFiles.forEach(sentFile => {
+			this.addToHierarchy(req, res, sentFile);
+		});
+
 	},
 
 	getFileHierarchy: async (req, res) => {
@@ -69,16 +98,15 @@ const fileController = {
 
 	},
 
-	addToHierarchy: async (req, res) => {
-		const {
-			section: section_id,
+	addToHierarchy: async (req, res, sentFile) => {
+		let {
+			section_id,
 			type,
 			name,
 		} = req.body;
 
 		let parentPath = req.body.parentPath;
 
-		const sentFile = req?.files?.sentFile;
 
 		if (!isValidObjectId(section_id))
 			return res.status(400).send("Invalid ID");
@@ -129,7 +157,10 @@ const fileController = {
 					data = assignment._id;
 				}
 				else if (type === "file") {
-					const { name: fileName, mimetype, size, data: fileData } = sentFile;
+					const { mimetype, size, data: fileData } = sentFile;
+
+					name = sentFile.name;
+					path = `${parentPath}/${name}`;
 
 
 					// if file already exists in directory
@@ -138,7 +169,7 @@ const fileController = {
 					if (file)
 						return res.status(400).send("A file with the same name already exists.");
 
-					file = new File({ name: fileName, type: mimetype, size, fileData });
+					file = new File({ section: section_id, name, type: mimetype, size, data: fileData });
 
 					file = await file.save();
 
@@ -176,9 +207,8 @@ const fileController = {
 		// }
 	},
 
-	// FIX deleting an assignment should also delete it in the hierarchy
 	deleteFromHierarchy: async (req, res) => {
-		const { section_id, path } = req.body;
+		let { section_id, path } = req.body;
 
 		if (!isValidObjectId(section_id))
 			return res.status(400).send("Invalid ID");
@@ -188,46 +218,41 @@ const fileController = {
 		if (!section)
 			return res.status(404).send("Section with the given ID was not found");
 
-		if (!path) {
-			return res.status(400).send("path cannot be empty");
+		path = cleanPath(path);
+		if (!path || path === "root") {
+			return res.status(400).send("path cannot be empty or root");
 		}
 
-		// find path and recursively delete its elements
-		let fileHierarchy = section.fileHierarchy;
+		try {
 
-		const filesToDelete = [];
+			// find path and recursively delete its elements
+			let originalHierarchy = section.fileHierarchy;
 
-		while (fileHierarchy) {
-			if (fileHierarchy.path === path) {
-				recurseStructure(fileHierarchy, filesToDelete);
 
-				for (let i = 0; i < filesToDelete.length; i++) {
-					let file = filesToDelete[i];
+			let { resultingHierarchy, currentHierarchy, deleteHierarchy } = removeItemFromTree(originalHierarchy, path);
 
-					if (file.type === "assignment") {
-						await Assignment.findByIdAndDelete(file.data);
+			section.fileHierarchy = resultingHierarchy;
+			section.markModified('fileHierarchy');
 
-					}
-					if (file.type === "file")
-						await File.findByIdAndDelete(file.data);
-					if (file.type === "folder") {
-						await section.fileHierarchy.children.pull(fileHierarchy._id);
-					}
-				}
+			await section.save();
 
-				section.markModified('fileHierarchy');
-				section = await section.save();
+			const filesToDelete = [];
+			recurseStructure(deleteHierarchy, filesToDelete);
 
-				return res.status(200).json({ hierarchy: section.fileHierarchy, assignment: req.body.assignment });
+
+			for (let i = 0; i < filesToDelete.length; i++) {
+				let file = filesToDelete[i];
+
+				if (file.type === "file")
+					await File.findByIdAndDelete(file.data);
 			}
 
-			fileHierarchy = fileHierarchy.children.find(child => path.includes(child.path));
+			return res.status(201).json({ hierarchy: currentHierarchy, deletedFiles: filesToDelete });
 		}
-
-		if (!fileHierarchy)
-			return res.status(404).send("path not found");
-	},
-
+		catch (e) {
+			return res.status(500).send(e.message);
+		}
+	}
 }
 
 function recurseStructure(fileHierarchy, filesToDelete) {
@@ -245,6 +270,26 @@ function recurseStructure(fileHierarchy, filesToDelete) {
 	if (fileHierarchy.children.length > 0)
 		fileHierarchy.children.forEach(child => recurseStructure(child, filesToDelete));
 
+}
+
+function removeItemFromTree(currentHierarchy, pathToDelete) {
+	let resultingHierarchy = currentHierarchy;
+	while (currentHierarchy) {
+		if (currentHierarchy.path !== pathToDelete) {
+			let nextChildIndex = currentHierarchy.children.findIndex(child => pathToDelete.includes(child.path));
+
+			if (currentHierarchy.children[nextChildIndex].path === pathToDelete) {
+				// deleteHierarchy = currentHierarchy.children[nextChildIndex];
+				deleteHierarchy = currentHierarchy.children.splice(nextChildIndex, 1)[0];
+				currentHierarchy = currentHierarchy.children;
+				break;
+			}
+			else {
+				currentHierarchy = currentHierarchy.children[nextChildIndex];
+			}
+		}
+	}
+	return { resultingHierarchy, currentHierarchy, deleteHierarchy };
 }
 
 function cleanPath(path) {

@@ -3,6 +3,7 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const fileSchema = new Schema({
+	section: { type: Schema.Types.ObjectId, ref: 'Section' },
 	name: { type: String, required: true },
 	size: { type: Number, required: true },
 	type: {

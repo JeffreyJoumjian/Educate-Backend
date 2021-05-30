@@ -15,11 +15,13 @@
 <input type="file" name="file" id="inp-file" multiple>
 <button type="submit" id="btn-create">Create Assignment</button>
 <button type="submit" id="btn-update">Update Assignment</button>
-<button type="submit" id="btn-submit">Submit Submission</button>
+<button type="submit" id="btn-submit">Submit Assignment</button>
+<button type="submit" id="btn-upload">Upload File</button>
 <script>
 	let btnCreate = document.getElementById('btn-create');
 	let btnUpdate = document.getElementById('btn-update');
 	let btnSubmit = document.getElementById('btn-submit');
+	let btnUpload = document.getElementById('btn-upload');
 	let inputFile = document.getElementById('inp-file');
 	let divFiles = document.getElementById('files');
 
@@ -47,6 +49,34 @@
 		e.preventDefault();
 		submitAssignment();
 	});
+
+	btnUpload.addEventListener('click', (e) => {
+		e.preventDefault();
+		uploadFiles();
+	});
+
+	async function uploadFiles() {
+		let formData = new FormData();
+
+		formData.append('section_id', "60b2369c99ce664d41bf080b");
+
+		// append files
+		for (let i = 0; i < inputFile.files.length; i++) {
+			formData.append('files', inputFile.files[i]);
+		}
+
+		let res = await fetch('http://localhost:3000/api/hierarchies/upload', {
+			method: 'POST',
+			mode: 'cors',
+			body: formData
+		});
+
+		if (res.status === 201) {
+			console.log(201 + " " + res.json());
+		} else {
+			console.log(res.status + " " + await res.text());
+		}
+	}
 
 	async function createAssignemnt() {
 
