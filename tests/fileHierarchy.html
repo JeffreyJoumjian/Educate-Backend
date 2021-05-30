@@ -258,17 +258,6 @@
 				link.remove();
 			}
 		}
-
-		function base64ToArrayBuffer(base64) {
-			let binaryString = window.atob(base64);
-			let binaryLen = binaryString.length;
-			let bytes = new Uint8Array(binaryLen);
-			for (let i = 0; i < binaryLen; i++) {
-				let ascii = binaryString.charCodeAt(i);
-				bytes[i] = ascii;
-			}
-			return bytes;
-		}
 	</script>
 </body>
 
