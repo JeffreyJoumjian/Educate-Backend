@@ -14,8 +14,14 @@ const announcementController = {
 
 		let announcements = await Announcement
 			.find({ section: section_id })
-			.populate('section')
-			.populate('section.course');
+			.populate({
+				path: 'section',
+				select: 'course',
+				populate: {
+					path: 'course',
+					select: 'name'
+				}
+			});
 
 		return res.status(200).json(announcements);
 	},
