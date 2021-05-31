@@ -6,7 +6,17 @@ function testDate() {
 
 	let startDate = parse(`13/05/2021 12:01 AM`, 'dd/MM/yyyy p', Date.now());
 	let endDate = parse(`30/05/2021 11:59 PM`, 'dd/MM/yyyy p', Date.now());
-	let currentDate = parseISO(new Date().toISOString(), "dd/MM/yyyy p");
+	// let currentDate = parse(Date.now(), "dd/MM/yyyy p", Date.now());
+
+	// let currFull = parse(`${}`);
+	let currentDate = format(Date.now(), 'dd/MM/yyyy p').split(" ");
+	let currTime = currentDate[1].split(":");
+
+	currTime[0] = currTime[0].length === 1 ? "0" + currTime[0] : currTime[0];
+
+	currTime = currTime.join(":");
+	currentDate[1] = currTime;
+	currentDate = currentDate.join(" ");
 
 	if (isAfter(currentDate, startDate) && isBefore(currentDate, endDate))
 		return true;

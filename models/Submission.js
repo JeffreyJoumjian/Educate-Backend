@@ -20,7 +20,16 @@ const submissionSchema = new Schema({
 });
 
 submissionSchema.pre('save', function () {
-	this.date = format(Date.now(), "dd/MM/yyyy p");
+	let currentDate = format(Date.now(), 'dd/MM/yyyy p').split(" ");
+	let currTime = currentDate[1].split(":");
+
+	currTime[0] = currTime[0].length === 1 ? "0" + currTime[0] : currTime[0];
+
+	currTime = currTime.join(":");
+	currentDate[1] = currTime;
+	currentDate = currentDate.join(" ");
+
+	this.date = currentDate;
 });
 
 const Submission = model('Submission', submissionSchema);

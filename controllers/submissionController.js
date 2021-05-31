@@ -138,7 +138,7 @@ const submissionController = {
 					});
 
 					if (req?.files?.files)
-						fileController.attachFiles(req, res, submission);
+						fileController.attachFiles(req, res, submission, true);
 
 					return res.status(201).json(await submission.save());
 				}
