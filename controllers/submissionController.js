@@ -130,11 +130,11 @@ const submissionController = {
 			if (isActive || allowLateSubmissions) {
 				// if student has already submitted => if multiple submissions, update submission else prevent
 				if (!submission) {
-					const { grade, isGraded, textSubmission, comments, date } = req.body;
+					const { grade, isGraded, textSubmission, comments } = req.body;
 					submission = new Submission({
 						assignment: assignment_id,
 						student: student_id,
-						grade, isGraded, textSubmission, comments, date
+						grade, isGraded, textSubmission, comments
 					});
 
 					if (req?.files?.files)
