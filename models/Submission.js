@@ -20,9 +20,7 @@ const submissionSchema = new Schema({
 });
 
 submissionSchema.pre('save', function () {
-	if (!this.date) {
-		this.date = format(Date.now(), "dd/MM/yyyy p");
-	}
+	this.date = format(Date.now(), "dd/MM/yyyy p");
 });
 
 const Submission = model('Submission', submissionSchema);
