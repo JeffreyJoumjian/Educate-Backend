@@ -115,7 +115,7 @@ const assignmentController = {
 
 
 			if (req?.files?.files)
-				fileController.attachFiles(req, res, assignment);
+				fileController.attachFiles(req, res, assignment, true);
 
 			await assignment.save();
 

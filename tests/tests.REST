@@ -159,9 +159,9 @@ POST http://localhost:3000/api/assignments/
 Content-Type: application/json
 
 {
-	"section": "60ad3b6f5524c70bafe78ad0",
-	"name":"Test Assignment",
-	"description":"This is a test assignment",
+	"section": "60b236038253894d220cd0dc",
+	"name":"Read and Summarize",
+	"description":"Read and summarize the following paragraph and submit it by the end of the session.",
 	"type":"assignment",
 	"maxGrade":100,
 	"gradePercentage":10,
