@@ -2,8 +2,6 @@ const { Schema, model } = require('mongoose');
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
-const { Assignment } = require('../models/Assignment');
-
 const hierarchyTypes = ['folder', 'assignment', 'file'];
 const dataTypes = [null, 'Assignment', 'File'];
 
@@ -20,27 +18,6 @@ const fileHierarchySchema = new Schema({
 	children: [this]
 });
 
-// fileHierarchySchema.pre('save', function () {
-// 	if (this.type === "folder" && !this.children)
-// 		this.children = [];
-
-// 	if (this.path !== "/") {
-// 		if (this.path[this.path.length - 1] === "/")
-// 			this.path = this.path.substring(0, this.path.length - 1);
-// 		if (this.path[0] === "/")
-// 			this.path = this.path.substring(1, this.path.length);
-// 	}
-// });
-
-// fileHierarchySchema.pre('save', function(){
-// 	if(this.type==="assignment"){
-// 		let assignment = await Assignment.findById(this.data);
-
-// 		if(!assignment){
-
-// 		}
-// 	}
-// });
 
 const FileHierarchy = model('FileHierarchy', fileHierarchySchema);
 

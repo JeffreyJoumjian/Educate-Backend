@@ -4,7 +4,6 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const { departments } = require('../utils/universityData');
 
-
 const courseSchema = new mongoose.Schema({
 	name: { type: String, required: true, unique: true },
 	code: { type: String, required: true, unique: true },

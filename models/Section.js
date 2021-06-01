@@ -6,7 +6,6 @@ const { semesters } = require('../utils/universityData');
 
 const { FileHierarchySchema } = require('./FileHierarchy');
 
-// SUGGESTION maybe create a semester object
 const sectionSchema = new Schema({
 	course: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
 	CRN: { type: Number, required: true, unique: true, },
@@ -17,9 +16,7 @@ const sectionSchema = new Schema({
 	schedule: { type: String },
 	instructors: { type: [Schema.Types.ObjectId], ref: 'Instructor' },
 	students: { type: [Schema.Types.ObjectId], ref: 'Student' },
-	// assignments: { type: [Schema.Types.ObjectId], ref: 'Assignment' },
 	fileHierarchy: { type: FileHierarchySchema }
-
 });
 
 sectionSchema.pre('save', function () {

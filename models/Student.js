@@ -13,14 +13,6 @@ const studentSchema = new Schema({
 	studentSections: [{ type: Schema.Types.ObjectId, ref: 'Section' }]
 });
 
-// add email uniqueness checking
-// studentSchema.methods.generateEmail = async function () {
-// 	this.email = this.fullName.split(" ").join(".") + "@student.edu";
-// 	// let student = await mongoose.model('Student').findOne({email: this.email});
-// 	// if(student)
-
-// }
-
 const Student = model('Student', studentSchema);
 
 function validateStudentSchema(isNew = true) {

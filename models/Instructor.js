@@ -13,10 +13,6 @@ const instructorSchema = new Schema({
 	department: { type: String, enum: departments }
 });
 
-// instructorSchema.methods.generateEmail = function () {
-// 	this.email = this.fullName.split(" ").join(".") + "@instructor.edu";
-// }
-
 const Instructor = model('Instructor', instructorSchema);
 
 function validateInstructorSchema(isNew = true) {

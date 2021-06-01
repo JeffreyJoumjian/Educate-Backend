@@ -29,7 +29,7 @@ const studentController = {
 			let student = await Student.findOne({ email: req.body.email });
 
 			if (student)
-				return res.status(400).send("The student with the given eamil already exists.");
+				return res.status(400).send("The student with the given email already exists.");
 
 			student = new Student(_.pick(req.body, ['fullName', 'email', 'password', 'phone', 'department', 'CGPA', 'studentSections']));
 

@@ -98,8 +98,7 @@ const submissionController = {
 
 	},
 
-	// ADD file checking
-	// FIX check if student is in section before submitting
+	// check if student is in section before submitting
 	submitAssignment: async (req, res) => {
 		try {
 			let assignment_id = req.body.assignment_id;
@@ -127,8 +126,9 @@ const submissionController = {
 
 			const { isActive, allowLateSubmissions, allowMultipleSubmissions } = assignment;
 
+			// if assignment is active or allows late submissions => submit
 			if (isActive || allowLateSubmissions) {
-				// if student has already submitted => if multiple submissions, update submission else prevent
+
 				if (!submission) {
 					const { grade, isGraded, textSubmission, comments } = req.body;
 					submission = new Submission({
@@ -137,11 +137,14 @@ const submissionController = {
 						grade, isGraded, textSubmission, comments
 					});
 
+					// attach files if there are any
 					if (req?.files?.files)
 						fileController.attachFiles(req, res, submission, true);
 
 					return res.status(201).json(await submission.save());
 				}
+				// if student has already submitted
+				// => only allow submission if assignment allows multiple submssions
 				else if (submission && allowMultipleSubmissions) {
 
 					for (let prop in req.body)

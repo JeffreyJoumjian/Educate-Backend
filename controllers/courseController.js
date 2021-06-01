@@ -61,9 +61,7 @@ const courseController = {
 			for (let prop in req.body)
 				course[prop] = req.body[prop];
 
-			await course.save();
-
-			return res.status(204).json(course);
+			return res.status(204).json(await course.save());
 
 		}
 		catch (e) {

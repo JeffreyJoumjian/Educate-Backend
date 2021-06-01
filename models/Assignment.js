@@ -10,7 +10,7 @@ const assignmentVisibilityTypes = ["manual", "automatic"];
 
 const assignmentSchema = new Schema({
 	section: { type: Schema.Types.ObjectId, ref: 'Section' },
-	name: { type: String, required: true },
+	name: { type: String, required: true, unique: true },
 	description: { type: String },
 	type: { type: String, enum: assignmentTypes },
 	maxGrade: {
@@ -25,7 +25,6 @@ const assignmentSchema = new Schema({
 		max: 100,
 		default: 10
 	},
-	// "04/07/2021 04:58 PM"
 	startDate: { type: String, required: true },
 	startTime: { type: String, required: true },
 	endDate: { type: String, required: true },
@@ -35,7 +34,6 @@ const assignmentSchema = new Schema({
 	isVisible: { type: Boolean, default: true },
 	allowLateSubmissions: { type: Boolean, default: false },
 	allowMultipleSubmissions: { type: Boolean, default: true },
-	// path: { type: String, required: true, default: '/' },
 	files: [{ type: FileSchema }]
 }, { timestamps: true });
 
