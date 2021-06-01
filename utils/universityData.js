@@ -34,6 +34,4 @@ const semesters = [
 ]
 
 
-const supportedFileTypes = ['pdf', 'png', 'jpg', 'txt'];
-
-module.exports = { departments, schools, titles, semesters, supportedFileTypes };
+module.exports = { departments, schools, titles, semesters };

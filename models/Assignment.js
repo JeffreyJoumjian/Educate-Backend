@@ -5,7 +5,6 @@ Joi.objectId = require('joi-objectid')(Joi);
 
 const { FileSchema } = require('../models/File');
 
-// const { supportedFileTypes } = require('../utils/universityData');
 const assignmentTypes = ['exam', 'quiz', 'paper', 'project', 'assignment'];
 const assignmentVisibilityTypes = ["manual", "automatic"];
 

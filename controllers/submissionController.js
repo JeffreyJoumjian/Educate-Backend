@@ -62,7 +62,7 @@ const submissionController = {
 		if (!submission)
 			return res.status(404).send("The student has not submitted any submissions for this assignment.");
 
-		return res.status(200).json(assignment);
+		return res.status(200).json(submission);
 	},
 
 	getAllStudentSubmissionsForSection: async (req, res) => {

@@ -6,11 +6,7 @@ const fileSchema = new Schema({
 	section: { type: Schema.Types.ObjectId, ref: 'Section' },
 	name: { type: String, required: true },
 	size: { type: Number, required: true },
-	type: {
-		type: String,
-		// enum: supportedFileTypes,
-		required: true
-	},
+	type: { type: String, required: true },
 	data: { type: Buffer, required: true }
 });
 

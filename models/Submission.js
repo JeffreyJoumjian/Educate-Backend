@@ -5,8 +5,6 @@ Joi.objectId = require('joi-objectid')(Joi);
 const { format } = require('date-fns');
 const { FileSchema } = require('./File');
 
-// const { supportedFileTypes } = require('../utils/universityData');
-
 const submissionSchema = new Schema({
 	assignment: { type: Schema.Types.ObjectId, ref: 'Assignment', required: true },
 	student: { type: Schema.Types.ObjectId, ref: 'Student', required: true },
