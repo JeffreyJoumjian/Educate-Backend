@@ -92,10 +92,8 @@ const fileController = {
 			// check if path is a subtring of one of the child paths
 			fileHierarchy = fileHierarchy.children.find(child => path.includes(child.path));
 		}
-
 		if (!fileHierarchy)
 			return res.status(404).send("path not found");
-
 	},
 
 	addToHierarchy: async (req, res, sentFile) => {

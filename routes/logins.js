@@ -56,10 +56,10 @@ router.post('/', async (req, res) => {
 	}
 });
 
-router.get('/', async (req, res) => {
-	console.log(req.cookies.educate_login_token);
-	return res.send();
-})
+// router.get('/', async (req, res) => {
+// 	console.log(req.cookies.educate_login_token);
+// 	return res.send();
+// })
 
 
 module.exports = router;
