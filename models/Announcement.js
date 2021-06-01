@@ -6,7 +6,7 @@ const announcementSchema = new Schema({
 	title: { type: String, required: true },
 	description: { type: String },
 	date: { type: String },
-});
+}, { timestamps: true });
 
 announcementSchema.pre('save', function () {
 	if (!this.date) {

@@ -20,7 +20,7 @@ const assignmentController = {
 		if (!section)
 			return res.status(404).send("The section with the given ID was not found");
 
-		let assignments = await Assignment.find({ section: section_id });
+		let assignments = await Assignment.find({ section: section_id }).sort({ createdAt: -1 });
 
 		return res.status(200).json(assignments);
 	},

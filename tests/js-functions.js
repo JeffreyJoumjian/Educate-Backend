@@ -1,30 +1,21 @@
 // TESTING DATES
 
-function testDate() {
+function testDate(obj) {
 
 	const { parse, parseISO, format, isAfter, isBefore } = require('date-fns');
 
-	let startDate = parse(`13/05/2021 12:01 AM`, 'dd/MM/yyyy p', Date.now());
-	let endDate = parse(`30/05/2021 11:59 PM`, 'dd/MM/yyyy p', Date.now());
-	// let currentDate = parse(Date.now(), "dd/MM/yyyy p", Date.now());
-
-	// let currFull = parse(`${}`);
-	let currentDate = format(Date.now(), 'dd/MM/yyyy p').split(" ");
-	let currTime = currentDate[1].split(":");
-
-	currTime[0] = currTime[0].length === 1 ? "0" + currTime[0] : currTime[0];
-
-	currTime = currTime.join(":");
-	currentDate[1] = currTime;
-	currentDate = currentDate.join(" ");
+	let startDate = parse(`${obj.startDate} ${obj.startTime}`, 'dd/MM/yyyy p', Date.now());
+	let endDate = parse(`${obj.endDate} ${obj.endTime}`, 'dd/MM/yyyy p', Date.now());
+	let currentDate = parseISO(new Date().toISOString(), "dd/MM/yyyy p");
 
 	if (isAfter(currentDate, startDate) && isBefore(currentDate, endDate))
-		return true;
+		return obj.isActive = true;
 
-	return false;
+	return obj.isActive = false;
+
 }
 
-console.log(testDate());
+console.log(testDate({ startDate: "31/05/2021", startTime: "08:00 AM", endDate: "07/06/2021", endTime: "11:59 PM" }));
 
 function testFileHierachy(path) {
 	let section = {

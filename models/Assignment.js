@@ -37,7 +37,7 @@ const assignmentSchema = new Schema({
 	allowMultipleSubmissions: { type: Boolean, default: true },
 	// path: { type: String, required: true, default: '/' },
 	files: [{ type: FileSchema }]
-});
+}, { timestamps: true });
 
 assignmentSchema.methods.setIsActive = function () {
 	// let date1 = parse("04/07/2021 04:58 PM", "dd/MM/yyyy p", Date.now());

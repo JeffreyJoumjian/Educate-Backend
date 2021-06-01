@@ -21,7 +21,8 @@ const announcementController = {
 					path: 'course',
 					select: 'name'
 				}
-			});
+			})
+			.sort({ createdAt: -1 });
 
 		return res.status(200).json(announcements);
 	},
@@ -49,7 +50,8 @@ const announcementController = {
 						path: 'course',
 						select: 'name'
 					}
-				});
+				})
+				.sort({ createdAt: -1 });
 
 			if (announcement.length > 0)
 				announcements.push(...announcement);
@@ -82,7 +84,8 @@ const announcementController = {
 						path: 'course',
 						select: 'name'
 					}
-				});
+				})
+				.sort({ createdAt: -1 });
 
 			if (announcement.length > 0)
 				announcements.push(...announcement);
