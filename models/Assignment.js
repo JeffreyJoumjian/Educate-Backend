@@ -53,6 +53,10 @@ assignmentSchema.methods.setIsActive = function () {
 	return this.isActive = false;
 };
 
+assignmentSchema.pre('save', function () {
+	this.setIsActive();
+});
+
 const Assignment = model('Assignment', assignmentSchema);
 
 
