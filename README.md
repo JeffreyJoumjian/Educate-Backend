@@ -1,4 +1,4 @@
-# Capstone-Backend
+# Educate-Backend
 
 This code is for the backend of my final year university project called "Educate". The project's aim is to redesign the popular education management platform BlackBoard Learn to make the new experience more modern, user oriented, intuitive, integrated and more productive for both teachers and students alike.
 
