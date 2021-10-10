@@ -27,7 +27,7 @@ Future plans include:
 - NodeJS (backend)
 - ExpressJS (server)
 - MongoDB and mongoose (database)
-- Heroku (Hosting)
 - Winston (logging)
-- JWTs and cookies
-- Joi validation
+- JWTs and cookies (authentication & authorization)
+- Joi (validation)
+- Heroku (Hosting)
