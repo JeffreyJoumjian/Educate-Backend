@@ -7,6 +7,7 @@ The code here contains the MVP of the platform, which includes:
 
 - Instructors can create, update and delete course material with support for multiple file types and icons.
 - Instructors can create, update, delete, and grade course assignments with the ability to attach files.
+- Instructors can create announcements in their courses, which is visible to all students.
 - Students can view active assignments and submit their solutions with the ability to attach files.
 - Users can navigate through the course material in a way similar to file explorers on modern Operating Systems and download them.
 
