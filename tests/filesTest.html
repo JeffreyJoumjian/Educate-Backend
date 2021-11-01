@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<h2>Upload a file</h2>
+<div id="files">
+
+</div>
+<input type="file" name="file" id="inp-file" multiple>
+<button type="submit" id="btn-create">Create Assignment</button>
+<button type="submit" id="btn-update">Update Assignment</button>
+<button type="submit" id="btn-submit">Submit Assignment</button>
+<button type="submit" id="btn-upload">Upload File</button>
+<script>
+	let btnCreate = document.getElementById('btn-create');
+	let btnUpdate = document.getElementById('btn-update');
+	let btnSubmit = document.getElementById('btn-submit');
+	let btnUpload = document.getElementById('btn-upload');
+	let inputFile = document.getElementById('inp-file');
+	let divFiles = document.getElementById('files');
+
+	inputFile.addEventListener('change', (e) => {
+		let files = inputFile.files;
+		divFiles.innerText = "";
+
+		for (let i = 0; i < files.length; i++) {
+			let file = files[i];
+			divFiles.innerText += `${file.name} ${file.type} ${file.size}\n`;
+		}
+
+
+	});
+
+	btnCreate.addEventListener('click', (e) => {
+		e.preventDefault();
+		createAssignemnt();
+	});
+	btnUpdate.addEventListener('click', (e) => {
+		e.preventDefault();
+		updateAssignmentInfo();
+	});
+	btnSubmit.addEventListener('click', (e) => {
+		e.preventDefault();
+		submitAssignment();
+	});
+
+	btnUpload.addEventListener('click', (e) => {
+		e.preventDefault();
+		uploadFiles();
+	});
+
+	async function uploadFiles() {
+		let formData = new FormData();
+
+		formData.append('section_id', "60b2369c99ce664d41bf080b");
+
+		// append files
+		for (let i = 0; i < inputFile.files.length; i++) {
+			formData.append('files', inputFile.files[i]);
+		}
+
+		let res = await fetch('http://localhost:3000/api/hierarchies/upload', {
+			method: 'POST',
+			mode: 'cors',
+			body: formData
+		});
+
+		if (res.status === 201) {
+			console.log(201 + " " + res.json());
+		} else {
+			console.log(res.status + " " + await res.text());
+		}
+	}
+
+	async function createAssignemnt() {
+
+		// create form data
+		let formData = new FormData();
+
+		// data you want to send to route
+		let assignment = {
+			section: "60b236038253894d220cd0dc",
+			name: "Read and Summarize",
+			description: "Read and summarize the following paragraph and submit it by the end of the session.",
+			type: "assignment",
+			maxGrade: 10,
+			gradePercentage: 100,
+			startDate: "02/06/2021",
+			startTime: "10:15 AM",
+			endDate: "02/06/2021",
+			endTime: "10:50 PM",
+			isActive: true,
+			visibility: "automatic",
+			allowLateSubmissions: true,
+			allowMultipleSubmissions: true,
+		};
+
+		// append assignment info
+		for (let prop in assignment)
+			formData.append(prop, assignment[prop]);
+
+		// append files
+		for (let i = 0; i < inputFile.files.length; i++) {
+			formData.append('files', inputFile.files[i]);
+		}
+
+		let res = await fetch('http://localhost:3000/api/assignments/', {
+			method: 'POST',
+			body: formData
+		});
+
+		if (res.status === 201) {
+			console.log(201 + " " + res);
+		} else {
+			console.log(res.status + " " + await res.text());
+		}
+	}
+
+	async function updateAssignmentInfo() {
+		let formData = new FormData();
+
+		let assignment = {
+			assignment_id: "609c4ed3407d3a12b8d397fe"
+			// section: "60954f2642150e087e5057c6",
+			// name: "Test Assignment",
+			// description: "This is a test assignment",
+			// type: "assignment",
+			// maxGrade: 100,
+			// gradePercentage: 10,
+			// startDate: "13/05/2021",
+			// startTime: "12:01 AM",
+			// endDate: "16/05/2021",
+			// endTime: "11:59 PM",
+			// isActive: true,
+			// visibility: "automatic",
+			// allowLateSubmissions: true,
+			// allowMultipleSubmissions: true,
+		};
+
+		// append assignment info
+		for (let prop in assignment)
+			formData.append(prop, assignment[prop]);
+
+		// append files
+		for (let i = 0; i < inputFile.files.length; i++) {
+			formData.append('files', inputFile.files[i]);
+		}
+		let res = await
+		fetch('http://localhost:3000/api/assignments/', {
+			method: 'PUT',
+			body: formData
+		});
+		if (res.status === 201) {
+			console.log(201 + " " + res);
+		} else {
+			console.log(res.status + " " + await res.text());
+		}
+	}
+
+	async function submitAssignment() {
+		let formData = new FormData();
+
+		let submission = {
+			"assignment_id": "609c4ed3407d3a12b8d397fe",
+			"student_id": "60956f50eb89150ca7f4db07",
+			"date": (new Date()).toISOString(),
+		}
+
+		// append submission info
+		for (let prop in submission)
+			formData.append(prop, submission[prop]);
+
+		// append files
+		for (let i = 0; i < inputFile.files.length; i++) {
+			formData.append('files', inputFile.files[i]);
+		}
+		let res = await
+		fetch('http://localhost:3000/api/submissions/submit', {
+			method: 'POST',
+			body: formData
+		});
+		if (res.status === 201) {
+			console.log(201 + " " + JSON.parse((JSON.stringify(await res.text()))));
+		} else {
+			console.log(res.status + " " + await res.text());
+		}
+	}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,322 @@
+GET http://localhost:3000/
+# POST https://example.com/comments HTTP/1.1
+# content-type: application/json
+# {
+#     "name": "sample",
+#     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+# }
+
+### GET ALL INSTRUCTORS
+GET http://localhost:3000/api/instructors/all
+
+### GET INSTRUCTORY BY ID
+GET http://localhost:3000/api/instructors/608c3fe2c2295f5315c02797 
+
+### GET INSTRUCTOR SECTIONS
+GET http://localhost:3000/api/instructors/60ad3a09c43d1a2d74cf0820/sections
+
+
+### CREATE INSTRUCTOR
+POST http://localhost:3000/api/instructors HTTP/1.1
+content-type: application/json
+
+{
+	"fullName": "John Johns", 
+	"title" : "Professor",
+	"email": "test2@test.com",
+	"phone": "01234567",
+	"password": "test",
+	"teachingSections": [],
+	"department": "Arts and Sciences"
+}
+
+### UPDATE INSTRUCTOR
+PUT http://localhost:3000/api/instructors/
+Content-Type: application/json
+
+{
+	"instructor_id": "608c3fe2c2295f5315c02797",
+	"fullName": "John Johns"
+}
+
+### DELETE INSTRUCTOR BY ID
+DELETE http://localhost:3000/api/instructors/ 
+Content-Type: application/json
+
+{
+	"instructor_id": "608d3ae4848e360a0bc0999c"
+}
+
+# COURSES
+###
+GET http://localhost:3000/api/courses/ 
+
+### CREATE COURSE
+POST http://localhost:3000/api/courses/ 
+Content-Type: application/json
+
+{
+	"name": "Web Programming",
+	"nameNumber":"CSC 430",
+	"description": "Et velit vitae dolorem voluptates atque non repellendus voluptate repudiandae. Reiciendis quod maiores omnis. Molestias modi maxime ipsa quia voluptas impedit ea. Laborum sapiente minus quo facere unde.",
+	"credits": 3,
+	"department":"Computer Science and Mathematics"
+}
+
+# SECTIONS
+### GET ALL SECTIONS BY COURSE
+GET  http://localhost:3000/api/sections/all/60904afc24a2bc16836a032f 
+
+### GET SECTION BY ID
+GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c
+
+### GET STUDENTS BY SECTION ID
+GET http://localhost:3000/api/sections/60ad3b6f5524c70bafe78ad0/students
+
+### GET INSRUCTORS BY SECTION ID
+GET http://localhost:3000/api/sections/60905bc9aef14f1acbb2ac6c/instructors
+
+
+### CREATE SECTION
+POST http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"course_id": "60904afc24a2bc16836a032f",
+	"CRN": "00002",
+	"semester": "Spring 2021",
+	"startDate":"January 20, 2021",
+	"endDate":"May 28, 2021",
+	"schedule":"MWF 10:00 AM 11:00 AM",
+	"instructors": ["60ae7dac8b6c3e07e92e8d09"]
+}
+
+### UPDATE SECTION
+PUT http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"section_id": "60954f2642150e087e5057c6",
+	"schedule":"MWF 10:00 AM 10:50 AM"
+}
+### DELETE SECTION
+DELETE  http://localhost:3000/api/sections/ 
+Content-Type: application/json
+
+{
+	"section_id": "609065ad6a1c2c1cd9e6fa09"
+
+}
+
+# STUDENTS
+
+### GET ALL STUDENTS
+GET http://localhost:3000/api/students/all
+
+### GET STUDENT BY ID
+GET http://localhost:3000/api/students/
+
+### CREATE STUDENT
+POST http://localhost:3000/api/students HTTP/1.1
+content-type: application/json
+
+{
+"fullName":"Jeffrey Joumjian",
+"email":"jeffrey.joumjian@test.com",
+"phone":"12345678",
+"password":"test",
+"department":"Computer Science and Mathematics",
+"studentSections":["60954f2642150e087e5057c6"]
+}
+
+### UPDATE STUDENT
+PUT http://localhost:3000/api/students/
+Content-Type: application/json
+
+{
+	"student_id":"60956f50eb89150ca7f4db07",
+	"fullName": "John Johns"
+}
+
+### DELETE STUDENT BY ID
+DELETE http://localhost:3000/api/students/ 
+Content-Type: application/json
+
+{
+	"student_id": "60956f50eb89150ca7f4db07"
+}
+
+# ASSIGNMENTS
+### GET ALL ASSIGNMENTS
+GET http://localhost:3000/api/assignments/
+
+### GET ALL ASSIGNMENTS FOR A SECTION
+GET http://localhost:3000/api/assignments/60ad3b6f5524c70bafe78ad0/all
+
+### CREATE NEW ASSIGNMENT
+# SUBMIT THIS USING filesTest.html
+POST http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"section": "60b236038253894d220cd0dc",
+	"name":"Read and Summarize",
+	"description":"Read and summarize the following paragraph and submit it by the end of the session.",
+	"type":"assignment",
+	"maxGrade":100,
+	"gradePercentage":10,
+	"startDate": "13/05/2021",
+	"startTime": "12:01 AM",
+	"endDate": "16/05/2021",
+	"endTime": "11:59 PM",
+	"isActive":true, 
+	"visibility":"automatic",
+	"allowLateSubmissions": true, 
+	"allowMultipleSubmissions": true
+}
+
+### UPDATE ASSIGNMENT 
+PUT http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"assignment_id":"609c4ed3407d3a12b8d397fe",
+	"endDate": "16/05/2021",
+	"endTime":"11:59 PM"
+}
+
+### DELETE ASSIGNMENT
+DELETE http://localhost:3000/api/assignments/
+Content-Type: application/json
+
+{
+	"path":"root/third",
+	"assignment_id":"60b298c6b257dd6168e6f099",
+	"section_id": "60b2369c99ce664d41bf080b"
+}
+
+### DELETE ASSIGNMENT
+
+
+# LOGGIN IN
+### POST LOGIN
+POST http://localhost:3000/api/logins/
+Content-Type: application/json
+
+{
+	"email":"jeffrey.joumjian@instructor.com",
+	"password":"test"
+}
+
+
+### POST LOGIN
+POST http://localhost:3000/api/logins/
+Content-Type: application/json
+
+{
+	"email":"jeffrey.joumjian@student.com",
+	"password":"test"
+}
+
+### TEST COOKIE
+GET http://localhost:3000/api/logins/
+Content-Type: application/json
+{
+
+}
+
+### GET ALL SUBMISSIONS OF A STUDENT BY SECTION
+GET http://localhost:3000/api/submissions/section/60b2369c99ce664d41bf080b/student/submissions/all/60b234e653dbf04ceb5b3605/
+
+
+### SUBMIT ASSIGNMENT
+POST http://localhost:3000/api/submissions/submit
+Content-Type: application/json
+
+{
+	"assignment_id": "60ae8c127df0b1324cc8f40e",
+	"student_id":"60ae88fed3d494432ccd6dee",
+	"textSubmission":"This is a submission for assignment 2"
+}
+
+### GRADE ASSIGNMENT
+PUT http://localhost:3000/api/submissions/grade
+Content-Type: application/json
+
+{
+	"submission_id": "60b257230482f7059091fb4a",
+	"grade":100,
+	"comments":"Good job!"
+}
+
+
+
+# FILE HIERARCHY
+### GET FOLDER HIERARCHY
+GET http://localhost:3000/api/hierarchies/60b2369c99ce664d41bf080b/?path=root
+
+
+### ADD FOLDER TO HIERARCHY
+POST http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"section_id": "60b2369c99ce664d41bf080b",
+	"parentPath":"root",
+	"type": "folder",
+	"name":"Exams"
+}
+### ADD Assignment TO HIERARCHY
+POST http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"assignment_id":"609c4ed3407d3a12b8d397fe",
+	"section_id": "60add6912000ca23f2b543b4",
+	"parentPath":"root/Assignments",
+	"type": "assignment",
+	"name":"exam 1 submission"
+}
+
+### REMOVE FOLDER TO HIERARCHY
+DELETE http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"section_id": "60add6912000ca23f2b543b4",
+	"path": "root/Assignments"
+}
+### TEST REMOVE FOLDER TO HIERARCHY
+DELETE http://localhost:3000/api/hierarchies/
+Content-Type: application/json
+
+{
+	"section_id": "60b2369c99ce664d41bf080b",
+	"path": "root/assignments/assignment1"
+}
+
+#  delete everything
+### delete
+DELETE http://localhost:3000/api/delete/all
+
+
+# ANNOUNCEMENTS
+### GET ANNOUNCEMENT
+GET http://localhost:3000/api/announcements/section/60b2369c99ce664d41bf080b
+
+### GET ANNOUNCEMENTS BY STUDENT ID
+GET http://localhost:3000/api/announcements/student/60b234e353dbf04ceb5b35fc
+
+### GET ANNOUNCEMENTS BY INSTRUCTOR ID
+GET http://localhost:3000/api/announcements/instructor/60b23956187b704dd8c36210
+
+
+### CREATE ANNOUNCEMENT
+POST http://localhost:3000/api/announcements/
+Content-Type: application/json
+
+{
+	"section_id":"60b2369c99ce664d41bf080b",
+	"title": "We are now live",
+	"description": "Make sure to have zoom installed on your computer for our meetings"
+}

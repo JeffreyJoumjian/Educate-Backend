@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>File Hierarchy</title>
+
+	<style>
+		.file {
+			color: blue;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-items: center;
+		}
+
+		.file p {
+			margin: 0;
+		}
+
+		.file button {
+			margin-left: 10px;
+		}
+
+		.file:hover p {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+
+		.input {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+		}
+
+		.input * {
+			margin-right: 20px;
+
+		}
+	</style>
+</head>
+
+<body>
+	<div class="input">
+		<button id="btn-back">back</button>
+		<label for="name">Folder Name: </label>
+		<input type="text" name="name" id="inp-name">
+		<button id="btn-new">new folder</button>
+
+		<label for="file">Select Files</label>
+		<input type="file" name="file" id="inp-file">
+		<button id="btn-upload">upload files</button>
+
+	</div>
+	<div>
+		<ul id="files" style="list-style: none;"></ul>
+	</div>
+	<div class="assignment-details">
+		<h3 class="assignment-name"></h3>
+		<p class="assignment-desc"></p>
+	</div>
+
+	<script>
+		const filesContainer = document.getElementById('files');
+		const btnBack = document.getElementById('btn-back');
+		const btnNewFolder = document.getElementById('btn-new');
+		const btnUpload = document.getElementById('btn-upload');
+		const inpName = document.getElementById('inp-name');
+		const inpAssignment = document.getElementById('inp-assignment');
+		const inpFiles = document.getElementById('inp-file');
+
+		let previousPath = [];
+		let currentPath = "root";
+		getHierarchyFromServer();
+
+		async function getHierarchyFromServer() {
+			let reqPath = currentPath;
+			let req = await fetch(`http://localhost:3000/api/hierarchies/60b2369c99ce664d41bf080b/?path=${reqPath}`, {
+				method: 'GET',
+				mode: 'cors'
+			});
+
+			if (req.status === 200) {
+				let res = await req.json();
+				console.log(res);
+				displayHierarchy(res);
+			} else {
+				console.log(await req.text());
+			}
+		}
+
+		function displayHierarchy(hierarchy) {
+			btnBack.style.display = currentPath === "root" ? "none" : "block";
+			filesContainer.innerHTML = "";
+
+
+			hierarchy.children.forEach(child => createHierarchyElement(child));
+		}
+
+		function createHierarchyElement(child) {
+			const template = `
+				<li class="file" data-path="" data-type="">
+					<p>[${child.type}] ${child.name}</p>
+					<button class="btn-delete">x</button>
+				</li>
+			`.trim();
+			let tempElement = document.createElement('template');
+
+			tempElement.innerHTML = template;
+			tempElement = tempElement.content.firstChild;
+			tempElement.setAttribute('data-path', child.path);
+			tempElement.setAttribute('data-type', child.type);
+
+			let type = child.type;
+
+			if (type === "assignment") {
+				tempElement.setAttribute("data-assignment-id", child.data);
+			}
+
+			if (type === "file")
+				tempElement.setAttribute("data-file-id", child.data);
+
+
+			tempElement.querySelector('p').addEventListener('click', function (e) {
+				if (type === "folder") {
+					previousPath.push(currentPath);
+					currentPath = e.target.parentNode.getAttribute('data-path');
+					getHierarchyFromServer();
+				}
+
+				if (type === "file") {
+					downloadFile(e.target.parentNode.getAttribute('data-file-id'));
+				}
+			});
+
+			tempElement.querySelector('.file .btn-delete').addEventListener('click', async (e) => {
+				let data = {
+					section_id: "60b2369c99ce664d41bf080b",
+					path: e.target.parentNode.getAttribute('data-path')
+				}
+
+				let req = await fetch('http://localhost:3000/api/hierarchies', {
+					method: 'DELETE',
+					mode: 'cors',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
+				});
+
+				if (req.status === 201) {
+					let res = (await req.json()).hierarchy;
+					getHierarchyFromServer();
+				} else {
+					console.log(req.status + " " + await req.text());
+				}
+			});
+
+			filesContainer.appendChild(tempElement);
+		}
+
+		function cleanUrl(url) {
+			return url.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+		}
+
+		btnBack.addEventListener('click', () => {
+			currentPath = previousPath.pop();
+			getHierarchyFromServer();
+		});
+
+		btnNewFolder.addEventListener('click', async () => {
+
+			if (inpName.value.trim()) {
+
+				const newHierarchyObj = {
+					section_id: "60b2369c99ce664d41bf080b",
+					parentPath: currentPath,
+					type: "folder",
+					name: inpName.value.trim()
+				}
+
+				let req = await fetch('http://localhost:3000/api/hierarchies', {
+					method: 'POST',
+					mode: 'cors',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(newHierarchyObj)
+				});
+
+				inpName.value = "";
+
+				if (req.status === 201) {
+					let res = (await req.json()).hierarchy;
+					displayHierarchy(res);
+				} else {
+					console.log(await req.text())
+				}
+			}
+		});
+
+		btnUpload.addEventListener('click', (e) => {
+			e.preventDefault();
+			if (inpFiles.files.length > 0)
+				uploadFiles();
+		});
+
+		async function uploadFiles() {
+
+			let data = {
+				section_id: "60b2369c99ce664d41bf080b",
+				parentPath: currentPath,
+				type: "file"
+			}
+
+			let formData = new FormData();
+
+			for (let prop in data)
+				formData.append(prop, data[prop]);
+
+			// append files
+			for (let i = 0; i < inpFiles.files.length; i++) {
+				formData.append('files', inpFiles.files[i]);
+			}
+			let req = await
+			fetch('http://localhost:3000/api/hierarchies/upload', {
+				method: 'POST',
+				mode: 'cors',
+				body: formData
+			});
+			if (req.status === 201) {
+				let res = (await req.json()).hierarchy;
+				console.log(res.children[0].data);
+				displayHierarchy(res);
+			} else {
+				console.log(req.status + " " + await req.text());
+			}
+		}
+
+		async function downloadFile(file_id) {
+			let req = await fetch(`http://localhost:3000/api/hierarchies/file/${file_id}`);
+
+			if (req.status === 200) {
+				let res = await req.json();
+
+				console.log(res);
+
+				let blob = new Blob([new Uint8Array(res.data.data)], {
+					type: res.type
+				});
+				let link = document.createElement('a');
+				link.href = window.URL.createObjectURL(blob);
+				link.download = res.name;
+				link.click();
+				link.remove();
+			}
+		}
+	</script>
+</body>
+
+</html>
